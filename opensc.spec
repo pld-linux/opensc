@@ -8,13 +8,14 @@ Group:		Applications
 Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
 # Source0-md5:	2b64a8e629bd28a00e707e35fd3eb9c7
 Patch0:		%{name}-libdir.patch
+Patch1:		%{name}-shared-ssl.patch
 URL:		http://www.opensc.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
 BuildRequires:	libassuan-devel >= 1:0.6.0
 BuildRequires:	libtool >= 1:1.4.2-9
 BuildRequires:	openldap-devel
-BuildRequires:	openssl-devel
+BuildRequires:	openssl-devel >= 0.9.7c
 BuildRequires:	openct-devel
 BuildRequires:	pam-devel
 BuildRequires:	pcsc-lite-devel
@@ -99,6 +100,7 @@ Wtyczka OpenSC Signer dla Mozilli.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 %{__libtoolize}
