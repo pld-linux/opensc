@@ -9,10 +9,11 @@ Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
 # Source0-md5:	46bb22935040816a0d741b5f76ed4b81
 Patch0:		%{name}-nolibs.patch
 Patch1:		%{name}-libdir.patch
+Patch2:		%{name}-assuan.patch
 URL:		http://www.opensc.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
-BuildRequires:	libassuan-devel
+BuildRequires:	libassuan-devel >= 1:0.6.0
 BuildRequires:	libtool >= 1:1.4.2-9
 BuildRequires:	openldap-devel
 BuildRequires:	openssl-devel
@@ -100,6 +101,7 @@ Wtyczka OpenSC Signer dla Mozilli.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %{__libtoolize}
@@ -124,7 +126,7 @@ mv -f $RPM_BUILD_ROOT%{_libdir}/security $RPM_BUILD_ROOT/lib
 
 # just install instead of symlinking
 rm -f $RPM_BUILD_ROOT%{mozplugindir}/opensc-signer.so
-mv -f $RPM_BUILD_ROOT%{_libdir}/opensc/opensc-signer.so $RPM_BUILD_ROOT%{mozplugindir}/plugins
+mv -f $RPM_BUILD_ROOT%{_libdir}/opensc/opensc-signer.so $RPM_BUILD_ROOT%{mozplugindir}
 
 # default config
 mv -f $RPM_BUILD_ROOT%{_datadir}/opensc/opensc.conf{.example,}
