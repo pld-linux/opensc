@@ -10,9 +10,11 @@ Patch0:		%{name}-nolibs.patch
 Patch1:		%{name}-segv.patch
 Patch2:		%{name}-lt.patch
 Patch3:		%{name}-ssl0.9.7.patch
+Patch4:		%{name}-cryptoflex.patch
 URL:		http://www.opensc.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
+BuildRequires:	libassuan-devel
 BuildRequires:	libtool >= 1:1.4.2-9
 BUildRequires:	openldap-devel
 BuildRequires:	openssl-devel
@@ -20,6 +22,8 @@ BuildRequires:	pam-devel
 BuildRequires:	pcsc-lite-devel
 BuildRequires:	readline-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		mozplugindir	/usr/lib/mozilla/plugins
 
 %description
 libopensc is a library for accessing SmartCard devices using PC/SC
@@ -77,19 +81,37 @@ OpenSC module for PAM.
 %description -n pam_opensc -l pl
 Modu³ PAM OpenSC.
 
+%package -n mozilla-plugin-opensc
+Summary:	OpenSC Signer plugin for Mozilla
+Summary(pl):	Wtyczka OpenSC Signer dla Mozilli
+# libassuan is GPL
+License:	GPL
+Group:		X11/Applications
+Requires:	%{name} = %{version}
+Requires:	pinentry-gtk
+
+%description -n mozilla-plugin-opensc
+OpenSC Signer plugin for Mozilla.
+
+%description -n mozilla-plugin-opensc -l pl
+Wtyczka OpenSC Signer dla Mozilli.
+
 %prep
 %setup -q
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
 %{__automake}
-%configure
+%configure \
+	--with-pin-entry=/usr/bin/pinentry-gtk \
+	--with-plugin-dir="%{mozplugindir}"
 
 %{__make}
 
@@ -149,3 +171,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n pam_opensc
 %defattr(644,root,root,755)
 %attr(755,root,root) /lib/security/pam_opensc.so
+
+%files -n mozilla-plugin-opensc
+%defattr(644,root,root,755)
+%attr(755,root,root) %{mozplugindir}/opensc-signer.so
