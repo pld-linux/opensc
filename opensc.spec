@@ -2,7 +2,8 @@ Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl):	Biblioteka OpenSC - do korzystania z kart procesorowych przy u¿yciu PC/SC Lite
 Name:		opensc
 Version:	0.8.1
-Release:	1
+Release:	2
+Epoch:		0
 License:	LGPL
 Group:		Applications
 Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
@@ -69,17 +70,17 @@ Static OpenSC libraries.
 %description static -l pl
 Statyczne biblioteki OpenSC.
 
-%package -n pam_opensc
+%package -n pam-pam_opensc
 Summary:	OpenSC module for PAM
 Summary(pl):	Modu³ PAM OpenSC
 License:	GPL
 Group:		Base
 Requires:	%{name} = %{version}
 
-%description -n pam_opensc
+%description -n pam-pam_opensc
 OpenSC module for PAM.
 
-%description -n pam_opensc -l pl
+%description -n pam-pam_opensc -l pl
 Modu³ PAM OpenSC.
 
 %package -n mozilla-plugin-opensc
@@ -186,7 +187,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/lib*.a
 
-%files -n pam_opensc
+%files -n pam-pam_opensc
 %defattr(644,root,root,755)
 %attr(755,root,root) /lib/security/pam_opensc.so
 
