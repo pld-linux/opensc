@@ -2,7 +2,7 @@ Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl):	Biblioteka OpenSC - do korzystania z kart procesorowych przy u¿yciu PC/SC Lite
 Name:		opensc
 Version:	0.8.1
-Release:	2
+Release:	3
 Epoch:		0
 License:	LGPL
 Group:		Applications
@@ -50,7 +50,10 @@ IDentity) produkowanych przez Setec.
 Summary:	OpenSC development files
 Summary(pl):	Pliki dla programistów u¿ywaj±cych OpenSC
 Group:		Development/Tools
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	openct-devel
+Requires:	openssl-devel
+Requires:	pcsc-lite-devel
 
 %description devel
 OpenSC development files.
@@ -62,7 +65,7 @@ Pliki dla programistów u¿ywaj±cych OpenSC.
 Summary:	Static OpenSC libraries
 Summary(pl):	Bibloteki statyczne OpenSC
 Group:		Development/Tools
-Requires:	%{name}-devel = %{version}
+Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 Static OpenSC libraries.
@@ -75,7 +78,7 @@ Summary:	OpenSC module for PAM
 Summary(pl):	Modu³ PAM OpenSC
 License:	GPL
 Group:		Base
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Obsoletes:	pam_opensc
 
 %description -n pam-pam_opensc
@@ -90,7 +93,7 @@ Summary(pl):	Wtyczka OpenSC Signer dla Mozilli
 # libassuan is GPL
 License:	GPL
 Group:		X11/Applications
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	pinentry-gtk
 
 %description -n mozilla-plugin-opensc
@@ -175,6 +178,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/opensc-config
 %attr(755,root,root) %{_libdir}/libopensc.so
+%attr(755,root,root) %{_libdir}/libpkcs11.so
 %attr(755,root,root) %{_libdir}/libpkcs15init.so
 %attr(755,root,root) %{_libdir}/libscconf.so
 %attr(755,root,root) %{_libdir}/libscldap.so
