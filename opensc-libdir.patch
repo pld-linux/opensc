@@ -1,21 +1,21 @@
---- opensc-0.8.0/src/pkcs11/Makefile.am.orig	Fri Aug 15 10:45:23 2003
-+++ opensc-0.8.0/src/pkcs11/Makefile.am	Thu Aug 21 13:13:26 2003
+--- opensc-0.8.1/src/pkcs11/Makefile.am.wiget	2003-09-30 09:11:33.000000000 +0200
++++ opensc-0.8.1/src/pkcs11/Makefile.am	2003-10-08 12:17:05.944565027 +0200
 @@ -1,7 +1,7 @@
  # Process this file with automake to create Makefile.in
  
- bundledir = $(BUNDLEDIR)
+ bundledir = @BUNDLEDIR@/pkcs11
 -libdir = @libdir@/pkcs11
-+pkcs11dir = @libdir@/pkcs11
++pksc11dir = @libdir@/pkcs11
+ includedir = @includedir@/opensc
  
  MAINTAINERCLEANFILES = Makefile.in
- 
-@@ -16,7 +16,8 @@
+@@ -17,7 +17,8 @@
  	framework-pkcs15init.c debug.c
  INC = sc-pkcs11.h
  
--lib_LTLIBRARIES = opensc-pkcs11.la libpkcs11.la
+-lib_LTLIBRARIES = opensc-pkcs11.la libpkcs11.la pkcs11-spy.la
 +lib_LTLIBRARIES = libpkcs11.la
-+pkcs11_LTLIBRARIES = opensc-pkcs11.la
++pksc11_LTLIBRARIES = opensc-pkcs11.la pkcs11-spy.la
  
  opensc_pkcs11_la_SOURCES = $(SRC) $(INC)
  opensc_pkcs11_la_LDFLAGS = -module -avoid-version

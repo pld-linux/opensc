@@ -1,15 +1,13 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl):	Biblioteka OpenSC - do korzystania z kart procesorowych przy u¿yciu PC/SC Lite
 Name:		opensc
-Version:	0.8.0
+Version:	0.8.1
 Release:	1
 License:	LGPL
 Group:		Applications
 Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
-# Source0-md5:	46bb22935040816a0d741b5f76ed4b81
-Patch0:		%{name}-nolibs.patch
-Patch1:		%{name}-libdir.patch
-Patch2:		%{name}-assuan.patch
+# Source0-md5:	2b64a8e629bd28a00e707e35fd3eb9c7
+Patch0:		%{name}-libdir.patch
 URL:		http://www.opensc.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -17,6 +15,7 @@ BuildRequires:	libassuan-devel >= 1:0.6.0
 BuildRequires:	libtool >= 1:1.4.2-9
 BuildRequires:	openldap-devel
 BuildRequires:	openssl-devel
+BuildRequires:	openct-devel
 BuildRequires:	pam-devel
 BuildRequires:	pcsc-lite-devel
 BuildRequires:	readline-devel
@@ -100,8 +99,6 @@ Wtyczka OpenSC Signer dla Mozilli.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %build
 %{__libtoolize}
@@ -134,8 +131,8 @@ mv -f $RPM_BUILD_ROOT%{_datadir}/opensc/scldap.conf{.example,}
 
 # useless (dlopened by *.so)
 rm -f $RPM_BUILD_ROOT%{_libdir}/libscam.{a,la} \
-	$RPM_BUILD_ROOT%{_libdir}/opensc/opensc-signer.{a,la} \
-	$RPM_BUILD_ROOT%{_libdir}/pkcs11/opensc-pkcs11.{a,la} \
+	$RPM_BUILD_ROOT%{_libdir}/opensc/*.{a,la} \
+	$RPM_BUILD_ROOT%{_libdir}/pkcs11/*.{a,la} \
 	$RPM_BUILD_ROOT/lib/security/pam_opensc.{a,la}
 
 %clean
@@ -157,6 +154,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libscam.so
 %dir %{_libdir}/pkcs11
 %attr(755,root,root) %{_libdir}/pkcs11/opensc-pkcs11.so
+%attr(755,root,root) %{_libdir}/pkcs11/pkcs11-spy.so
+%dir %{_libdir}/opensc
+%attr(755,root,root) %{_libdir}/opensc/engine_opensc.so
+%attr(755,root,root) %{_libdir}/opensc/engine_pkcs11.so
 %dir %{_datadir}/opensc
 %config(noreplace) %verify(not size mtime md5) %{_datadir}/opensc/*.conf
 %config(noreplace) %verify(not size mtime md5) %{_datadir}/opensc/*.profile
