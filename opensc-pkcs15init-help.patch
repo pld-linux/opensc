@@ -1,0 +1,10 @@
+--- opensc-0.7.0/src/tools/pkcs15-init.c.orig	Tue Apr 23 00:59:50 2002
++++ opensc-0.7.0/src/tools/pkcs15-init.c	Wed Apr 23 10:10:31 2003
+@@ -147,6 +147,7 @@
+ 	"Specify key file format (default PEM)",
+ 	"Specify passphrase for unlocking secret key",
+ 	"Store an X.509 certificate",
++	"authority ???",
+ 
+ 	"Private key stored as an extractable key",
+ 	"Insecure mode: do not require PIN/passphrase for private key",
