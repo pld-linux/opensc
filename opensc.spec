@@ -1,17 +1,17 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl):	Biblioteka OpenSC - do korzystania z kart procesorowych przy u¿yciu PC/SC Lite
 Name:		opensc
-Version:	0.8.1
-Release:	5
+Version:	0.9.4
+Release:	1
 Epoch:		0
 License:	LGPL
 Group:		Applications
 Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
-# Source0-md5:	2b64a8e629bd28a00e707e35fd3eb9c7
+# Source0-md5:	76c18fc9bd9fad9c45396ea81f317551
 Patch0:		%{name}-libdir.patch
 Patch1:		%{name}-shared-ssl.patch
 Patch2:		%{name}-segv.patch
-Patch3:		%{name}-atr.patch
+Patch3:		%{name}-explorer-debug.patch
 URL:		http://www.opensc.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -172,10 +172,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/opensc
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.conf
 %config(noreplace) %verify(not size mtime md5) %{_datadir}/opensc/*.profile
+%{_mandir}/man1/cardos-info.1*
 %{_mandir}/man1/cryptoflex-tool.1*
 %{_mandir}/man1/opensc-explorer.1*
 %{_mandir}/man1/opensc-tool.1*
-%{_mandir}/man1/pkcs15*
+%{_mandir}/man1/pkcs11-tool.1*
+%{_mandir}/man1/pkcs15-*.1*
 %{_mandir}/man[57]/*
 
 %files devel
