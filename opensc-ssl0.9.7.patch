@@ -1,0 +1,24 @@
+--- opensc-0.7.0/src/libopensc/card-gpk.c.orig	Thu May  2 13:54:27 2002
++++ opensc-0.7.0/src/libopensc/card-gpk.c	Wed Mar 12 10:31:58 2003
+@@ -735,8 +735,8 @@
+ 	apdu->le += 3;
+ 	if (crycks1)
+ 		memcpy(crycks1, out, 3);
+-	memset(k1, 0, sizeof(k1));
+-	memset(k2, 0, sizeof(k2));
++	memset(&k1, 0, sizeof(k1));
++	memset(&k2, 0, sizeof(k2));
+ 	memset(in, 0, sizeof(in));
+ 	memset(out, 0, sizeof(out));
+ 	memset(block, 0, sizeof(block));
+@@ -878,8 +878,8 @@
+ 	if (memcmp(r_rn, out+4, 4) != 0)
+ 		r = SC_ERROR_INVALID_ARGUMENTS;
+ 
+-	memset(k1, 0, sizeof(k1));
+-	memset(k2, 0, sizeof(k2));
++	memset(&k1, 0, sizeof(k1));
++	memset(&k2, 0, sizeof(k2));
+ 	memset(out, 0, sizeof(out));
+ 	return r;
+ }
