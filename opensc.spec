@@ -16,7 +16,7 @@ BuildRequires:	automake
 BuildRequires:	libassuan-devel >= 1:0.6.0
 BuildRequires:	libtool >= 1:1.4.2-9
 BuildRequires:	openldap-devel
-BuildRequires:	openssl-devel >= 0.9.7c
+BuildRequires:	openssl-devel >= 0.9.7d
 BuildRequires:	openct-devel
 BuildRequires:	pam-devel
 BuildRequires:	pcsc-lite-devel
