@@ -6,6 +6,7 @@ Release:	1
 License:	LGPL
 Group:		Applications
 Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
+Patch0:		%{name}-nolibs.patch
 URL:		http://www.opensc.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -75,6 +76,7 @@ Modu³ PAM OpenSC.
 
 %prep
 %setup -q
+%patch -p1
 
 %build
 %{__libtoolize}
