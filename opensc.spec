@@ -11,6 +11,7 @@ Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
 Patch0:		%{name}-libdir.patch
 Patch1:		%{name}-shared-ssl.patch
 Patch2:		%{name}-segv.patch
+Patch3:		%{name}-atr.patch
 URL:		http://www.opensc.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -92,8 +93,6 @@ Modu³ PAM OpenSC.
 %package -n mozilla-plugin-opensc
 Summary:	OpenSC Signer plugin for Mozilla
 Summary(pl):	Wtyczka OpenSC Signer dla Mozilli
-# libassuan is GPL
-License:	GPL
 Group:		X11/Applications
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	pinentry-gtk
@@ -109,6 +108,7 @@ Wtyczka OpenSC Signer dla Mozilli.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %{__libtoolize}
