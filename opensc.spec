@@ -9,6 +9,7 @@ Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
 Patch0:		%{name}-nolibs.patch
 Patch1:		%{name}-segv.patch
 Patch2:		%{name}-lt.patch
+Patch3:		%{name}-ssl0.9.7.patch
 URL:		http://www.opensc.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -81,6 +82,7 @@ Modu³ PAM OpenSC.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %{__libtoolize}
@@ -98,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT/lib
 mv -f $RPM_BUILD_ROOT%{_libdir}/security $RPM_BUILD_ROOT/lib
+
+# libscam.a is broken (contains libscrandom.a) and not needed (static module)
+rm -f $RPM_BUILD_ROOT%{_libdir}/libscam.{a,la}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
