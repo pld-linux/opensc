@@ -1,108 +1,140 @@
-
-Summary:	
-Summary(pl):
+Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
+Summary(pl):	Biblioteka OpenSC - do korzystania z kart procesorowych przy u¿yciu PC/SC Lite
 Name:		opensc
 Version:	0.7.0
 Release:	1
-#License:	
-#Group:		Daemons
+License:	LGPL
+Group:		Applications
 Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
-PreReq:		rc-scripts
-Requires:	pcsc-lite
+URL:		http://www.opensc.org/
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool >= 1:1.4.2-9
+BUildRequires:	openldap-devel
+BuildRequires:	openssl-devel
+BuildRequires:	pam-devel
+BuildRequires:	pcsc-lite-devel
+BuildRequires:	readline-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-pcscd is the daemon program for PC/SC Lite. It is a resource manager
-that coorinates communications with Smart Card readers and Smart Cards
-that are connected to the system. The purpose of PCSC Lite is to
-provide a Windows(R) SCard interface in a very small form factor for
-communicating to smartcards and readers. PCSC Lite uses the same
-winscard api as used under Windows(R)
+libopensc is a library for accessing SmartCard devices using PC/SC
+Lite middleware package. It is also the core library of the OpenSC
+project. Basic functionality (e.g. SELECT FILE, READ BINARY) should
+work on any ISO 7816-4 compatible SmartCard. Encryption and decryption
+using private keys on the SmartCard is at the moment possible only
+with PKCS#15 compatible cards, such as the FINEID (Finnish Electronic
+IDentity) card manufactured by Setec.
 
 %description -l pl
-pcscd jest demonem dla PC/SC Lite. Jest to zarz±dca zasobów,
-koordynuj±cy komunikacjê z czytnikami Smart Card pod³±czonymi do
-systemu. Celem PCSC Lite jest udostêpnienie interfejsu zgodnego z
-Windows(R) SCard s³u¿±cego do komunikacji z czytnikami kart chipowych.
-U¿ywa tego samego API winscard, które jest u¿ywane pod Microsoft[TM]
-Windows(R).
-
-%package libs
-Summary:	Libraries
-Summary(pl):	Bibloteki
-Group:		Libraries
-
-%description libs
-What is a package w/o his libs?
-
-%description libs -l pl
-Bo czym¿e jest pakiet bez swoich bibliotek?
+libopensc to biblioteka do korzystania z kart procesorowych przy
+u¿yciu pakietu warstwy po¶redniej PC/SC Lite. Jest to tak¿e podstawowa
+biblioteka projektu OpenSC. Podstawowa funkcjonalno¶æ (np. SELECT
+FILE, READ BINARY) powinna dzia³aæ tak¿e z dowoln± kart± procesorow±
+zgodn± z ISO-7816-4. Szyfrowanie i odszyfrowywanie przy u¿yciu
+prywatnych kluczy na karcie na razie jest mo¿liwe tylko przy u¿yciu
+kart kompatybilnych z PKCS#16, takich jak FINEID (Finnish Electronic
+IDentity) produkowanych przez Setec.
 
 %package devel
-Summary:	Development files
-Summary(pl):	Pliki dla programistów
+Summary:	OpenSC development files
+Summary(pl):	Pliki dla programistów u¿ywaj±cych OpenSC
 Group:		Development/Tools
 Requires:	%{name}-libs = %{version}
 
 %description devel
-Development files.
+OpenSC development files.
 
 %description devel -l pl
-Pliki dla programistów.
+Pliki dla programistów u¿ywaj±cych OpenSC.
 
 %package static
-Summary:	Static libraries
-Summary(pl):	Bibloteki statyczne
+Summary:	Static OpenSC libraries
+Summary(pl):	Bibloteki statyczne OpenSC
 Group:		Development/Tools
 Requires:	%{name}-devel = %{version}
 
 %description static
-Static PSCS libraries.
+Static OpenSC libraries.
 
 %description static -l pl
-Statyczne biblioteki PCSC.
+Statyczne biblioteki OpenSC.
+
+%package -n pam_opensc
+Summary:	OpenSC module for PAM
+Summary(pl):	Modu³ PAM OpenSC
+License:	GPL
+Group:		Base
+Requires:	%{name} = %{version}
+
+%description -n pam_opensc
+OpenSC module for PAM.
+
+%description -n pam_opensc -l pl
+Modu³ PAM OpenSC.
 
 %prep
-%setup -q -a1 -a2
+%setup -q
 
 %build
-%configure2_13
-%{__make}
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__automake}
+%configure
 
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
+
+install -d $RPM_BUILD_ROOT/lib
+mv -f $RPM_BUILD_ROOT%{_libdir}/security $RPM_BUILD_ROOT/lib
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	libs -p /sbin/ldconfig
-%postun	libs -p /sbin/ldconfig
+%post	-p /sbin/ldconfig
+%postun	-p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
-%doc doc/*
-%doc AUTHORS DRIVERS NEWS HELP README SECURITY
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/reader.conf
-%attr(755,root,root) %{_sbindir}/pcscd
-%attr(755,root,root) %{_bindir}/bundleTool
-%attr(755,root,root) %{_bindir}/formaticc
-%attr(755,root,root) %{_bindir}/installifd
-#%attr(754,root,root) /etc/rc.d/init.d/pcscd
-%{_mandir}/man1/bundleTool.1*
-%{_mandir}/man8/pcscd.8*
-
-%files libs
-%defattr(644,root,root,755)
-%{_libdir}/lib*.so.*
+%doc AUTHORS ChangeLog NEWS README README.signer THANKS TODO docs/pkcs-15v1_1.asn
+%attr(755,root,root) %{_bindir}/cryptoflex-tool
+%attr(755,root,root) %{_bindir}/opensc-explorer
+%attr(755,root,root) %{_bindir}/opensc-tool
+%attr(755,root,root) %{_bindir}/pkcs15-*
+%attr(755,root,root) %{_libdir}/lib*.so.*.*
+%attr(755,root,root) %{_libdir}/libscam.so
+%dir %{_libdir}/pkcs11
+%attr(755,root,root) %{_libdir}/pkcs11/opensc-pkcs11.so
+%dir %{_datadir}/opensc
+%{_datadir}/opensc/*.profile
+%{_mandir}/man[157]/pkcs15*
 
 %files devel
 %defattr(644,root,root,755)
-%{_libdir}/lib*.so
-%{_libdir}/libpcsc*.la
-%{_includedir}/*
+%attr(755,root,root) %{_bindir}/opensc-config
+%attr(755,root,root) %{_libdir}/libopensc.so
+%attr(755,root,root) %{_libdir}/libpkcs15init.so
+%attr(755,root,root) %{_libdir}/libscconf.so
+%attr(755,root,root) %{_libdir}/libscldap.so
+%{_libdir}/libopensc.la
+%{_libdir}/libpkcs15init.la
+%{_libdir}/libscconf.la
+%{_libdir}/libscldap.la
+%{_libdir}/libscrandom.a
+%{_includedir}/opensc
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/lib*.a
+%{_libdir}/libopensc.a
+%{_libdir}/libpkcs15init.a
+%{_libdir}/libscconf.a
+%{_libdir}/libscldap.a
+
+%files -n pam_opensc
+%defattr(644,root,root,755)
+%attr(755,root,root) /lib/security/pam_opensc.so
