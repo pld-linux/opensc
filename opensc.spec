@@ -48,7 +48,7 @@ IDentity) produkowanych przez Setec.
 Summary:	OpenSC development files
 Summary(pl):	Pliki dla programistów u¿ywaj±cych OpenSC
 Group:		Development/Tools
-Requires:	%{name}-libs = %{version}
+Requires:	%{name} = %{version}
 
 %description devel
 OpenSC development files.
