@@ -25,7 +25,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # datadir is used for config files and (editable) profiles
 %define		_datadir	%{_sysconfdir}
-%define		mozplugindir	/usr/lib/mozilla/plugins
+%define		mozplugindir	/usr/%{_lib}/mozilla/plugins
 
 %description
 libopensc is a library for accessing SmartCard devices using PC/SC
@@ -125,8 +125,8 @@ install -d $RPM_BUILD_ROOT%{mozplugindir}
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT/lib
-mv -f $RPM_BUILD_ROOT%{_libdir}/security $RPM_BUILD_ROOT/lib
+install -d $RPM_BUILD_ROOT/%{_lib}
+mv -f $RPM_BUILD_ROOT%{_libdir}/security $RPM_BUILD_ROOT/%{_lib}
 
 # just install instead of symlinking
 rm -f $RPM_BUILD_ROOT%{mozplugindir}/opensc-signer.so
@@ -140,7 +140,7 @@ mv -f $RPM_BUILD_ROOT%{_datadir}/opensc/scldap.conf{.example,}
 rm -f $RPM_BUILD_ROOT%{_libdir}/libscam.{a,la} \
 	$RPM_BUILD_ROOT%{_libdir}/opensc/*.{a,la} \
 	$RPM_BUILD_ROOT%{_libdir}/pkcs11/*.{a,la} \
-	$RPM_BUILD_ROOT/lib/security/pam_opensc.{a,la}
+	$RPM_BUILD_ROOT/%{_lib}/security/pam_opensc.{a,la}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -194,7 +194,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n pam-pam_opensc
 %defattr(644,root,root,755)
-%attr(755,root,root) /lib/security/pam_opensc.so
+%attr(755,root,root) /%{_lib}/security/pam_opensc.so
 
 %files -n mozilla-plugin-opensc
 %defattr(644,root,root,755)
