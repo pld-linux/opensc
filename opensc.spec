@@ -1,18 +1,14 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl):	Biblioteka OpenSC - do korzystania z kart procesorowych przy u¿yciu PC/SC Lite
 Name:		opensc
-Version:	0.7.0
-Release:	2
+Version:	0.8.0
+Release:	1
 License:	LGPL
 Group:		Applications
 Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
-# Source0-md5:	12a6afb94a947065d9d0a4eaf91cb15e
+# Source0-md5:	46bb22935040816a0d741b5f76ed4b81
 Patch0:		%{name}-nolibs.patch
-Patch1:		%{name}-segv.patch
-Patch2:		%{name}-lt.patch
-Patch3:		%{name}-ssl0.9.7.patch
-Patch4:		%{name}-cryptoflex.patch
-Patch5:		%{name}-pkcs15init-help.patch
+Patch1:		%{name}-libdir.patch
 URL:		http://www.opensc.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -104,10 +100,6 @@ Wtyczka OpenSC Signer dla Mozilli.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
 
 %build
 %{__libtoolize}
@@ -122,17 +114,27 @@ Wtyczka OpenSC Signer dla Mozilli.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT%{mozplugindir}
 
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT/lib
 mv -f $RPM_BUILD_ROOT%{_libdir}/security $RPM_BUILD_ROOT/lib
 
-# libscam.a is broken (contains libscrandom.a) and not needed (static module)
-rm -f $RPM_BUILD_ROOT%{_libdir}/libscam.{a,la}
+# just install instead of symlinking
+rm -f $RPM_BUILD_ROOT%{mozplugindir}/opensc-signer.so
+mv -f $RPM_BUILD_ROOT%{_libdir}/opensc/opensc-signer.so $RPM_BUILD_ROOT%{mozplugindir}/plugins
 
+# default config
 mv -f $RPM_BUILD_ROOT%{_datadir}/opensc/opensc.conf{.example,}
 mv -f $RPM_BUILD_ROOT%{_datadir}/opensc/scldap.conf{.example,}
+
+# useless (dlopened by *.so)
+rm -f $RPM_BUILD_ROOT%{_libdir}/libscam.{a,la} \
+	$RPM_BUILD_ROOT%{_libdir}/opensc/opensc-signer.{a,la} \
+	$RPM_BUILD_ROOT%{_libdir}/pkcs11/opensc-pkcs11.{a,la} \
+	$RPM_BUILD_ROOT/lib/security/pam_opensc.{a,la}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -142,10 +144,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog NEWS README README.signer THANKS TODO docs/pkcs-15v1_1.asn
+%doc ANNOUNCE ChangeLog NEWS docs/{pkcs-15v1_1.asn,opensc.{html,css}}
+%attr(755,root,root) %{_bindir}/cardos-info
 %attr(755,root,root) %{_bindir}/cryptoflex-tool
 %attr(755,root,root) %{_bindir}/opensc-explorer
 %attr(755,root,root) %{_bindir}/opensc-tool
+%attr(755,root,root) %{_bindir}/pkcs11-tool
 %attr(755,root,root) %{_bindir}/pkcs15-*
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
 %attr(755,root,root) %{_libdir}/libscam.so
@@ -154,7 +158,11 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/opensc
 %config(noreplace) %verify(not size mtime md5) %{_datadir}/opensc/*.conf
 %config(noreplace) %verify(not size mtime md5) %{_datadir}/opensc/*.profile
-%{_mandir}/man[157]/pkcs15*
+%{_mandir}/man1/cryptoflex-tool.1*
+%{_mandir}/man1/opensc-explorer.1*
+%{_mandir}/man1/opensc-tool.1*
+%{_mandir}/man1/pkcs15*
+%{_mandir}/man[57]/*
 
 %files devel
 %defattr(644,root,root,755)
@@ -163,19 +171,15 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libpkcs15init.so
 %attr(755,root,root) %{_libdir}/libscconf.so
 %attr(755,root,root) %{_libdir}/libscldap.so
-%{_libdir}/libopensc.la
-%{_libdir}/libpkcs15init.la
-%{_libdir}/libscconf.la
-%{_libdir}/libscldap.la
-%{_libdir}/libscrandom.a
+%{_libdir}/lib*.la
 %{_includedir}/opensc
+%{_pkgconfigdir}/*.pc
+%{_mandir}/man1/opensc-config.1*
+%{_mandir}/man3/*
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/libopensc.a
-%{_libdir}/libpkcs15init.a
-%{_libdir}/libscconf.a
-%{_libdir}/libscldap.a
+%{_libdir}/lib*.a
 
 %files -n pam_opensc
 %defattr(644,root,root,755)
