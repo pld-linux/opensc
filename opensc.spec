@@ -76,6 +76,7 @@ Summary(pl):	Modu³ PAM OpenSC
 License:	GPL
 Group:		Base
 Requires:	%{name} = %{version}
+Obsoletes:	pam_opensc
 
 %description -n pam-pam_opensc
 OpenSC module for PAM.
