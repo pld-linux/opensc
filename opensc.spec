@@ -10,6 +10,7 @@ Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
 # Source0-md5:	2b64a8e629bd28a00e707e35fd3eb9c7
 Patch0:		%{name}-libdir.patch
 Patch1:		%{name}-shared-ssl.patch
+Patch2:		%{name}-segv.patch
 URL:		http://www.opensc.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -107,6 +108,7 @@ Wtyczka OpenSC Signer dla Mozilli.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %{__libtoolize}
@@ -139,7 +141,7 @@ mv -f $RPM_BUILD_ROOT%{_sysconfdir}/opensc.conf{.example,}
 mv -f $RPM_BUILD_ROOT%{_sysconfdir}/scldap.conf{.example,}
 
 # useless (dlopened by *.so)
-rm -f $RPM_BUILD_ROOT%{_libdir}/libscam.{a,la} \
+rm -f $RPM_BUILD_ROOT%{_libdir}/{libscam,opensc-*}.{a,la} \
 	$RPM_BUILD_ROOT%{_libdir}/opensc/*.{a,la} \
 	$RPM_BUILD_ROOT%{_libdir}/pkcs11/*.{a,la} \
 	$RPM_BUILD_ROOT/%{_lib}/security/pam_opensc.{a,la}
@@ -161,8 +163,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/pkcs15-*
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
 %attr(755,root,root) %{_libdir}/libscam.so
+%attr(755,root,root) %{_libdir}/opensc-pkcs11.so
 %dir %{_libdir}/pkcs11
-%attr(755,root,root) %{_libdir}/pkcs11/opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/pkcs11/pkcs11-spy.so
 %dir %{_libdir}/opensc
 %attr(755,root,root) %{_libdir}/opensc/engine_opensc.so
