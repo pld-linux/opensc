@@ -22,7 +22,7 @@ BuildRequires:	openssl-devel >= 0.9.7d
 BuildRequires:	openct-devel
 BuildRequires:	pam-devel
 BuildRequires:	pcsc-lite-devel
-BuildRequires:	pkgconfig
+BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	readline-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
