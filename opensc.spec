@@ -6,6 +6,7 @@ Release:	2
 License:	LGPL
 Group:		Applications
 Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
+# Source0-md5:	12a6afb94a947065d9d0a4eaf91cb15e
 Patch0:		%{name}-nolibs.patch
 Patch1:		%{name}-segv.patch
 Patch2:		%{name}-lt.patch
