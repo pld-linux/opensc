@@ -24,7 +24,8 @@ BuildRequires:	readline-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # datadir is used for config files and (editable) profiles
-%define		_datadir	%{_sysconfdir}
+%define		_datadir	/etc
+%define		_sysconfdir	/etc/opensc
 %define		mozplugindir	/usr/%{_lib}/mozilla/plugins
 
 %description
@@ -111,6 +112,7 @@ Wtyczka OpenSC Signer dla Mozilli.
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
+%{__autoheader}
 %{__automake}
 %configure \
 	--with-pin-entry=/usr/bin/pinentry-gtk \
@@ -133,8 +135,8 @@ rm -f $RPM_BUILD_ROOT%{mozplugindir}/opensc-signer.so
 mv -f $RPM_BUILD_ROOT%{_libdir}/opensc/opensc-signer.so $RPM_BUILD_ROOT%{mozplugindir}
 
 # default config
-mv -f $RPM_BUILD_ROOT%{_datadir}/opensc/opensc.conf{.example,}
-mv -f $RPM_BUILD_ROOT%{_datadir}/opensc/scldap.conf{.example,}
+mv -f $RPM_BUILD_ROOT%{_sysconfdir}/opensc.conf{.example,}
+mv -f $RPM_BUILD_ROOT%{_sysconfdir}/scldap.conf{.example,}
 
 # useless (dlopened by *.so)
 rm -f $RPM_BUILD_ROOT%{_libdir}/libscam.{a,la} \
@@ -166,7 +168,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/opensc/engine_opensc.so
 %attr(755,root,root) %{_libdir}/opensc/engine_pkcs11.so
 %dir %{_datadir}/opensc
-%config(noreplace) %verify(not size mtime md5) %{_datadir}/opensc/*.conf
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.conf
 %config(noreplace) %verify(not size mtime md5) %{_datadir}/opensc/*.profile
 %{_mandir}/man1/cryptoflex-tool.1*
 %{_mandir}/man1/opensc-explorer.1*
