@@ -1,5 +1,5 @@
---- opensc-0.7.0/configure.ac.orig	Sun Jun  2 22:56:18 2002
-+++ opensc-0.7.0/configure.ac	Tue Mar 11 13:47:17 2003
+--- opensc-0.8.0/configure.in.orig	Sun Jun  2 22:56:18 2002
++++ opensc-0.8.0/configure.in	Tue Mar 11 13:47:17 2003
 @@ -379,8 +379,6 @@
    LIBS="$t_oldLibs"
  fi
