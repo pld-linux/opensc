@@ -1,0 +1,11 @@
+--- opensc-0.7.0/configure.ac.orig	Sun Jun  2 22:56:18 2002
++++ opensc-0.7.0/configure.ac	Tue Mar 11 13:47:17 2003
+@@ -379,8 +379,6 @@
+   LIBS="$t_oldLibs"
+ fi
+ 
+-# Always link lib{socket,nsl,resolv) if found, sigh.
+-LIBS="$LIBS $LIBSOCKET $LIBRESOLV"
+ 
+ AC_ARG_WITH(flex-dir,
+ 	[  --with-flex-dir=PATH    Specify path to flex installation],
