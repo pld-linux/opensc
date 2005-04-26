@@ -1,17 +1,16 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl):	Biblioteka OpenSC - do korzystania z kart procesorowych przy u¿yciu PC/SC Lite
 Name:		opensc
-Version:	0.9.4
-Release:	2
+Version:	0.9.6
+Release:	1
 Epoch:		0
 License:	LGPL
 Group:		Applications
 Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
-# Source0-md5:	76c18fc9bd9fad9c45396ea81f317551
+# Source0-md5:	38fdd64566cc6fc83338d659e816b4fb
 Patch0:		%{name}-libdir.patch
-Patch1:		%{name}-shared-ssl.patch
-Patch2:		%{name}-segv.patch
-Patch3:		%{name}-explorer-debug.patch
+Patch1:		%{name}-segv.patch
+Patch2:		%{name}-explorer-debug.patch
 URL:		http://www.opensc.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -109,7 +108,6 @@ Wtyczka OpenSC Signer dla Mozilli.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 %build
 %{__libtoolize}
@@ -138,8 +136,8 @@ rm -f $RPM_BUILD_ROOT%{mozplugindir}/opensc-signer.so
 mv -f $RPM_BUILD_ROOT%{_libdir}/opensc/opensc-signer.so $RPM_BUILD_ROOT%{mozplugindir}
 
 # default config
-mv -f $RPM_BUILD_ROOT%{_sysconfdir}/opensc.conf{.example,}
-mv -f $RPM_BUILD_ROOT%{_sysconfdir}/scldap.conf{.example,}
+install etc/opensc.conf $RPM_BUILD_ROOT%{_sysconfdir}
+install etc/scldap.conf $RPM_BUILD_ROOT%{_sysconfdir}
 
 # useless (dlopened by *.so)
 rm -f $RPM_BUILD_ROOT%{_libdir}/{libscam,opensc-*}.{a,la} \
@@ -171,8 +169,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/opensc/engine_opensc.so
 %attr(755,root,root) %{_libdir}/opensc/engine_pkcs11.so
 %dir %{_datadir}/opensc
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.conf
-%config(noreplace) %verify(not size mtime md5) %{_datadir}/opensc/*.profile
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*.conf
+%config(noreplace) %verify(not md5 mtime size) %{_datadir}/opensc/*.profile
 %{_mandir}/man1/cardos-info.1*
 %{_mandir}/man1/cryptoflex-tool.1*
 %{_mandir}/man1/opensc-explorer.1*
