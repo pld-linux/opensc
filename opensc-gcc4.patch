@@ -1,0 +1,12 @@
+diff -Nru opensc-0.9.6.orig/src/pam/pam_support.c opensc-0.9.6/src/pam/pam_support.c
+--- opensc-0.9.6.orig/src/pam/pam_support.c	2005-04-14 11:02:10.000000000 +0200
++++ opensc-0.9.6/src/pam/pam_support.c	2005-04-28 17:51:36.360434392 +0200
+@@ -205,7 +205,7 @@
+ 
+ static void _cleanup(pam_handle_t * pamh, void *x, int error_status)
+ {
+-	_pam_delete((char *) x);
++	_pam_delete(x);
+ }
+ 
+ /* ************************************************************** *
