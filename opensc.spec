@@ -11,6 +11,7 @@ Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
 Patch0:		%{name}-libdir.patch
 Patch1:		%{name}-segv.patch
 Patch2:		%{name}-explorer-debug.patch
+Patch3:		%{name}-gcc4.patch
 URL:		http://www.opensc.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -108,6 +109,7 @@ Wtyczka OpenSC Signer dla Mozilli.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %{__libtoolize}
