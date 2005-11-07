@@ -1,5 +1,21 @@
 --- opensc-0.9.2/src/tools/opensc-explorer.c.orig	2004-06-28 20:00:28.000000000 +0200
 +++ opensc-0.9.2/src/tools/opensc-explorer.c	2004-08-20 11:56:06.000000000 +0200
+@@ -1124,7 +1124,6 @@
+ 	return -1;
+ }
+ 
+-#if 0
+ static int do_debug(int argc, char **argv)
+ {
+ 	int i;
+@@ -1146,7 +1145,6 @@
+ 	}
+ 	return 0;
+ }
+-#endif
+ 
+ 
+ static int do_pksign(int argc, char **argv)
 @@ -1429,6 +1429,7 @@
   { "exit",	do_quit,	"quit this program"			},
   { "update_record", do_update_record, "update record"			},
