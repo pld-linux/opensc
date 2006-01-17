@@ -2,7 +2,7 @@ Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl):	Biblioteka OpenSC - do korzystania z kart procesorowych przy u¿yciu PC/SC Lite
 Name:		opensc
 Version:	0.9.6
-Release:	1
+Release:	4
 Epoch:		0
 License:	LGPL
 Group:		Applications
@@ -11,12 +11,13 @@ Source0:	http://www.opensc.org/files/%{name}-%{version}.tar.gz
 Patch0:		%{name}-libdir.patch
 Patch1:		%{name}-segv.patch
 Patch2:		%{name}-explorer-debug.patch
+Patch3:		%{name}-gcc4.patch
 URL:		http://www.opensc.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
 BuildRequires:	libassuan-devel >= 1:0.6.0
 BuildRequires:	libtool >= 1:1.4.2-9
-BuildRequires:	openldap-devel
+BuildRequires:	openldap-devel >= 2.3
 BuildRequires:	openssl-devel >= 0.9.7d
 BuildRequires:	openct-devel
 BuildRequires:	pam-devel
@@ -108,6 +109,7 @@ Wtyczka OpenSC Signer dla Mozilli.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %{__libtoolize}
