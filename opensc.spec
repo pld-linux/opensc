@@ -6,11 +6,11 @@ Release:	1
 Epoch:		0
 License:	LGPL
 Group:		Applications
-Source0:	http://www.opensc.org/files/opensc/%{name}-%{version}.tar.gz
+Source0:	http://www.opensc-project.org/files/opensc/%{name}-%{version}.tar.gz
 # Source0-md5:	5549c7c339775356784837887750d232
 Patch0:		%{name}-explorer-debug.patch
 Patch1:		%{name}-libassuan.patch
-URL:		http://www.opensc.org/
+URL:		http://www.opensc-project.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
 BuildRequires:	libassuan-devel >= 1:0.6.0
