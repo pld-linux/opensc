@@ -1,13 +1,13 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl):	Biblioteka OpenSC - do korzystania z kart procesorowych przy u¿yciu PC/SC Lite
 Name:		opensc
-Version:	0.10.1
+Version:	0.11.0
 Release:	1
 Epoch:		0
 License:	LGPL
 Group:		Applications
 Source0:	http://www.opensc-project.org/files/opensc/%{name}-%{version}.tar.gz
-# Source0-md5:	5549c7c339775356784837887750d232
+# Source0-md5:	be9cced6c703253baf78ccd9970679fa
 Patch0:		%{name}-explorer-debug.patch
 Patch1:		%{name}-libassuan.patch
 URL:		http://www.opensc-project.org/
@@ -115,7 +115,7 @@ install -d $RPM_BUILD_ROOT%{mozplugindir}
 
 # just install instead of symlinking
 rm -f $RPM_BUILD_ROOT%{mozplugindir}/opensc-signer.so
-mv -f $RPM_BUILD_ROOT%{_libdir}/opensc/opensc-signer.so $RPM_BUILD_ROOT%{mozplugindir}
+mv -f $RPM_BUILD_ROOT%{_libdir}/opensc-signer.so $RPM_BUILD_ROOT%{mozplugindir}
 
 # default config
 install etc/opensc.conf $RPM_BUILD_ROOT%{_sysconfdir}
@@ -132,13 +132,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc NEWS README doc/{*.{html,css},html/tools.html}
+%doc NEWS README doc/ChangeLog doc/{*.{html,css},html/tools.html}
 %attr(755,root,root) %{_bindir}/cardos-info
 %attr(755,root,root) %{_bindir}/cryptoflex-tool
 %attr(755,root,root) %{_bindir}/eidenv
 %attr(755,root,root) %{_bindir}/netkey-tool
 %attr(755,root,root) %{_bindir}/opensc-explorer
 %attr(755,root,root) %{_bindir}/opensc-tool
+%attr(755,root,root) %{_bindir}/piv-tool
 %attr(755,root,root) %{_bindir}/pkcs11-tool
 %attr(755,root,root) %{_bindir}/pkcs15-*
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
