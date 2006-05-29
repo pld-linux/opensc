@@ -1,9 +1,8 @@
-# TODO: use browser-plugins framework for signer plugin
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl):	Biblioteka OpenSC - do korzystania z kart procesorowych przy u¿yciu PC/SC Lite
 Name:		opensc
 Version:	0.11.0
-Release:	1
+Release:	2
 Epoch:		0
 License:	LGPL
 Group:		Applications
@@ -17,18 +16,23 @@ BuildRequires:	automake
 BuildRequires:	libassuan-devel >= 1:0.6.0
 BuildRequires:	libltdl-devel
 BuildRequires:	libtool >= 1:1.4.2-9
+BuildRequires:	openct-devel
 BuildRequires:	openldap-devel
 BuildRequires:	openssl-devel >= 0.9.7d
-BuildRequires:	openct-devel
 BuildRequires:	pcsc-lite-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	readline-devel
+BuildRequires:	rpmbuild(macros) >= 1.236
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # datadir is used for config files and (editable) profiles
 %define		_datadir	/etc
 %define		_sysconfdir	/etc/opensc
-%define		mozplugindir	/usr/%{_lib}/mozilla/plugins
+%define		_plugindir	%{_libdir}/browser-plugins
+
+# TODO: galeon and skipstone.
+# use macro, otherwise extra LF inserted along with the ifarch
+%define	browsers mozilla, mozilla-firefox, konqueror, opera, seamonkey
 
 %description
 libopensc is a library for accessing SmartCard devices using PC/SC
@@ -77,18 +81,25 @@ Static OpenSC libraries.
 %description static -l pl
 Statyczne biblioteki OpenSC.
 
-%package -n mozilla-plugin-opensc
+%package -n browser-plugin-opensc
 Summary:	OpenSC Signer plugin for Mozilla
 Summary(pl):	Wtyczka OpenSC Signer dla Mozilli
 Group:		X11/Applications
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	browser-plugins(%{_target_base_arch})
 Requires:	pinentry-gtk
+Provides:	mozilla-plugin-opensc
+Obsoletes:	mozilla-plugin-opensc
 
-%description -n mozilla-plugin-opensc
-OpenSC Signer plugin for Mozilla.
+%description -n browser-plugin-opensc
+OpenSC Signer browser plugin.
 
-%description -n mozilla-plugin-opensc -l pl
-Wtyczka OpenSC Signer dla Mozilli.
+Supported browsers: %{browsers}.
+
+%description -n browser-plugin-opensc -l pl
+Wtyczka OpenSC Signer dla przegl±darek.
+
+Obs³ugiwane przegl±darki: %{browsers}.
 
 %prep
 %setup -q
@@ -103,20 +114,20 @@ Wtyczka OpenSC Signer dla Mozilli.
 %{__automake}
 %configure \
 	--with-pin-entry=/usr/bin/pinentry-gtk \
-	--with-plugin-dir="%{mozplugindir}"
+	--with-plugin-dir="%{_plugindir}"
 
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{mozplugindir}
+install -d $RPM_BUILD_ROOT%{_plugindir}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 # just install instead of symlinking
-rm -f $RPM_BUILD_ROOT%{mozplugindir}/opensc-signer.so
-mv -f $RPM_BUILD_ROOT%{_libdir}/opensc-signer.so $RPM_BUILD_ROOT%{mozplugindir}
+rm -f $RPM_BUILD_ROOT%{_plugindir}/opensc-signer.so
+mv -f $RPM_BUILD_ROOT%{_libdir}/opensc-signer.so $RPM_BUILD_ROOT%{_plugindir}
 
 # default config
 install etc/opensc.conf $RPM_BUILD_ROOT%{_sysconfdir}
@@ -130,6 +141,41 @@ rm -rf $RPM_BUILD_ROOT
 
 %post	-p /sbin/ldconfig
 %postun	-p /sbin/ldconfig
+
+%triggerin -n browser-plugin-opensc -- mozilla-firefox
+%nsplugin_install -d %{_libdir}/mozilla-firefox/plugins opensc-signer.so
+
+%triggerun -n browser-plugin-opensc -- mozilla-firefox
+%nsplugin_uninstall -d %{_libdir}/mozilla-firefox/plugins opensc-signer.so
+
+%triggerin -n browser-plugin-opensc -- mozilla
+%nsplugin_install -d %{_libdir}/mozilla/plugins opensc-signer.so
+
+%triggerun -n browser-plugin-opensc -- mozilla
+%nsplugin_uninstall -d %{_libdir}/mozilla/plugins opensc-signer.so
+
+%triggerin -n browser-plugin-opensc -- opera
+%nsplugin_install -d %{_libdir}/opera/plugins opensc-signer.so
+
+%triggerun -n browser-plugin-opensc -- opera
+%nsplugin_uninstall -d %{_libdir}/opera/plugins opensc-signer.so
+
+%triggerin -n browser-plugin-opensc -- konqueror
+%nsplugin_install -d %{_libdir}/kde3/plugins/konqueror opensc-signer.so
+
+%triggerun -n browser-plugin-opensc -- konqueror
+%nsplugin_uninstall -d %{_libdir}/kde3/plugins/konqueror opensc-signer.so
+
+%triggerin -n browser-plugin-opensc -- seamonkey
+%nsplugin_install -d %{_libdir}/seamonkey/plugins opensc-signer.so
+
+%triggerun -n browser-plugin-opensc -- seamonkey
+%nsplugin_uninstall -d %{_libdir}/seamonkey/plugins opensc-signer.so
+
+# as rpm removes the old obsoleted package files after the triggers
+# are ran, add another trigger to make the links there.
+%triggerpostun -n browser-plugin-opensc -- mozilla-plugin-opensc
+%nsplugin_install -f -d %{_libdir}/mozilla/plugins opensc-signer.so
 
 %files
 %defattr(644,root,root,755)
@@ -179,6 +225,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libpkcs15init.a
 %{_libdir}/libscconf.a
 
-%files -n mozilla-plugin-opensc
+%files -n browser-plugin-opensc
 %defattr(644,root,root,755)
-%attr(755,root,root) %{mozplugindir}/opensc-signer.so
+%attr(755,root,root) %{_plugindir}/opensc-signer.so
