@@ -107,6 +107,7 @@ Obs³ugiwane przegl±darki: %{browsers}.
 %patch1 -p1
 
 %build
+touch config.rpath
 %{__libtoolize}
 %{__aclocal} -I aclocal
 %{__autoconf}
