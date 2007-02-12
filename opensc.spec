@@ -1,5 +1,5 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
-Summary(pl):	Biblioteka OpenSC - do korzystania z kart procesorowych przy uøyciu PC/SC Lite
+Summary(pl.UTF-8):   Biblioteka OpenSC - do korzystania z kart procesorowych przy u≈ºyciu PC/SC Lite
 Name:		opensc
 Version:	0.11.1
 Release:	2
@@ -43,19 +43,19 @@ using private keys on the SmartCard is at the moment possible only
 with PKCS#15 compatible cards, such as the FINEID (Finnish Electronic
 IDentity) card manufactured by Setec.
 
-%description -l pl
+%description -l pl.UTF-8
 libopensc to biblioteka do korzystania z kart procesorowych przy
-uøyciu pakietu warstwy po∂redniej PC/SC Lite. Jest to takøe podstawowa
-biblioteka projektu OpenSC. Podstawowa funkcjonalno∂Ê (np. SELECT
-FILE, READ BINARY) powinna dzia≥aÊ takøe z dowoln± kart± procesorow±
-zgodn± z ISO-7816-4. Szyfrowanie i odszyfrowywanie przy uøyciu
-prywatnych kluczy na karcie na razie jest moøliwe tylko przy uøyciu
+u≈ºyciu pakietu warstwy po≈õredniej PC/SC Lite. Jest to tak≈ºe podstawowa
+biblioteka projektu OpenSC. Podstawowa funkcjonalno≈õƒá (np. SELECT
+FILE, READ BINARY) powinna dzia≈Çaƒá tak≈ºe z dowolnƒÖ kartƒÖ procesorowƒÖ
+zgodnƒÖ z ISO-7816-4. Szyfrowanie i odszyfrowywanie przy u≈ºyciu
+prywatnych kluczy na karcie na razie jest mo≈ºliwe tylko przy u≈ºyciu
 kart kompatybilnych z PKCS#16, takich jak FINEID (Finnish Electronic
 IDentity) produkowanych przez Setec.
 
 %package devel
 Summary:	OpenSC development files
-Summary(pl):	Pliki dla programistÛw uøywaj±cych OpenSC
+Summary(pl.UTF-8):   Pliki dla programist√≥w u≈ºywajƒÖcych OpenSC
 Group:		Development/Tools
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libltdl-devel
@@ -66,24 +66,24 @@ Requires:	pcsc-lite-devel
 %description devel
 OpenSC development files.
 
-%description devel -l pl
-Pliki dla programistÛw uøywaj±cych OpenSC.
+%description devel -l pl.UTF-8
+Pliki dla programist√≥w u≈ºywajƒÖcych OpenSC.
 
 %package static
 Summary:	Static OpenSC libraries
-Summary(pl):	Bibloteki statyczne OpenSC
+Summary(pl.UTF-8):   Bibloteki statyczne OpenSC
 Group:		Development/Tools
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 Static OpenSC libraries.
 
-%description static -l pl
+%description static -l pl.UTF-8
 Statyczne biblioteki OpenSC.
 
 %package -n browser-plugin-opensc
 Summary:	OpenSC Signer plugin for Mozilla
-Summary(pl):	Wtyczka OpenSC Signer dla Mozilli
+Summary(pl.UTF-8):   Wtyczka OpenSC Signer dla Mozilli
 Group:		X11/Applications
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	browser-plugins(%{_target_base_arch})
@@ -96,10 +96,10 @@ OpenSC Signer browser plugin.
 
 Supported browsers: %{browsers}.
 
-%description -n browser-plugin-opensc -l pl
-Wtyczka OpenSC Signer dla przegl±darek.
+%description -n browser-plugin-opensc -l pl.UTF-8
+Wtyczka OpenSC Signer dla przeglƒÖdarek.
 
-Obs≥ugiwane przegl±darki: %{browsers}.
+Obs≈Çugiwane przeglƒÖdarki: %{browsers}.
 
 %prep
 %setup -q
