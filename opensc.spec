@@ -1,5 +1,5 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
-Summary(pl.UTF-8):   Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
+Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
 Version:	0.11.1
 Release:	2
@@ -55,7 +55,7 @@ IDentity) produkowanych przez Setec.
 
 %package devel
 Summary:	OpenSC development files
-Summary(pl.UTF-8):   Pliki dla programistów używających OpenSC
+Summary(pl.UTF-8):	Pliki dla programistów używających OpenSC
 Group:		Development/Tools
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libltdl-devel
@@ -71,7 +71,7 @@ Pliki dla programistów używających OpenSC.
 
 %package static
 Summary:	Static OpenSC libraries
-Summary(pl.UTF-8):   Bibloteki statyczne OpenSC
+Summary(pl.UTF-8):	Bibloteki statyczne OpenSC
 Group:		Development/Tools
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
@@ -83,7 +83,7 @@ Statyczne biblioteki OpenSC.
 
 %package -n browser-plugin-opensc
 Summary:	OpenSC Signer plugin for Mozilla
-Summary(pl.UTF-8):   Wtyczka OpenSC Signer dla Mozilli
+Summary(pl.UTF-8):	Wtyczka OpenSC Signer dla Mozilli
 Group:		X11/Applications
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	browser-plugins(%{_target_base_arch})
