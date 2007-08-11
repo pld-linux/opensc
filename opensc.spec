@@ -1,13 +1,13 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
-Version:	0.11.2
+Version:	0.11.3
 Release:	1
 Epoch:		0
-License:	LGPL
+License:	LGPL v2.1+
 Group:		Applications
 Source0:	http://www.opensc-project.org/files/opensc/%{name}-%{version}.tar.gz
-# Source0-md5:	ac646f187e3adb1db29b9c6ca028dcc6
+# Source0-md5:	10897652e1f8d08d3c953982a4237f2e
 Patch0:		%{name}-explorer-debug.patch
 URL:		http://www.opensc-project.org/
 BuildRequires:	autoconf >= 2.52
@@ -132,7 +132,7 @@ mv -f $RPM_BUILD_ROOT%{_libdir}/opensc-signer.so $RPM_BUILD_ROOT%{_plugindir}
 install etc/opensc.conf $RPM_BUILD_ROOT%{_sysconfdir}
 
 # useless (dlopened by *.so)
-rm -f $RPM_BUILD_ROOT%{_libdir}/{opensc,pkcs11}-*.{a,la} \
+rm -f $RPM_BUILD_ROOT%{_libdir}/{onepin-opensc,opensc,pkcs11}-*.{a,la} \
 	$RPM_BUILD_ROOT%{_libdir}/opensc/*.{a,la}
 
 %clean
@@ -189,6 +189,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/pkcs11-tool
 %attr(755,root,root) %{_bindir}/pkcs15-*
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
+%attr(755,root,root) %{_libdir}/onepin-opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/pkcs11-spy.so
 %dir %{_datadir}/opensc
