@@ -1,14 +1,13 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
-Version:	0.11.3
+Version:	0.11.4
 Release:	1
 Epoch:		0
 License:	LGPL v2.1+
 Group:		Applications
 Source0:	http://www.opensc-project.org/files/opensc/%{name}-%{version}.tar.gz
-# Source0-md5:	10897652e1f8d08d3c953982a4237f2e
-Patch0:		%{name}-explorer-debug.patch
+# Source0-md5:	2031aa617be609d50d014d5d370bb8a2
 URL:		http://www.opensc-project.org/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -102,7 +101,6 @@ Obsługiwane przeglądarki: %{browsers}.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 touch config.rpath
@@ -188,7 +186,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/piv-tool
 %attr(755,root,root) %{_bindir}/pkcs11-tool
 %attr(755,root,root) %{_bindir}/pkcs15-*
-%attr(755,root,root) %{_libdir}/lib*.so.*.*
+%attr(755,root,root) %{_libdir}/libopensc.so.*.*.*
+%attr(755,root,root) %{_libdir}/libpkcs15init.so.*.*.*
+%attr(755,root,root) %{_libdir}/libscconf.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libopensc.so.2
+%attr(755,root,root) %ghost %{_libdir}/libpkcs15init.so.2
+%attr(755,root,root) %ghost %{_libdir}/libscconf.so.2
 %attr(755,root,root) %{_libdir}/onepin-opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/pkcs11-spy.so
@@ -202,7 +205,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/opensc-tool.1*
 %{_mandir}/man1/pkcs11-tool.1*
 %{_mandir}/man1/pkcs15-*.1*
-%{_mandir}/man[57]/*
+%{_mandir}/man5/pkcs15-profile.5*
 
 %files devel
 %defattr(644,root,root,755)
@@ -215,9 +218,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libpkcs15init.la
 %{_libdir}/libscconf.la
 %{_includedir}/opensc
-%{_pkgconfigdir}/*.pc
+%{_pkgconfigdir}/libopensc.pc
+%{_pkgconfigdir}/libpkcs15init.pc
+%{_pkgconfigdir}/libscconf.pc
 %{_mandir}/man1/opensc-config.1*
-%{_mandir}/man3/*
+%{_mandir}/man3/sc_*.3*
 
 %files static
 %defattr(644,root,root,755)
