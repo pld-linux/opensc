@@ -1,36 +1,31 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
-Version:	0.11.4
-Release:	3
+Version:	0.11.5
+Release:	1
 Epoch:		0
 License:	LGPL v2.1+
 Group:		Applications
 Source0:	http://www.opensc-project.org/files/opensc/%{name}-%{version}.tar.gz
-# Source0-md5:	2031aa617be609d50d014d5d370bb8a2
+# Source0-md5:	bcb65ead86dc477866e59f9a45bc69a4
 URL:		http://www.opensc-project.org/
-BuildRequires:	autoconf >= 2.52
-BuildRequires:	automake
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	automake >= 1:1.10
 BuildRequires:	libassuan-devel >= 1:0.6.0
 BuildRequires:	libltdl-devel
 BuildRequires:	libtool >= 1:1.4.2-9
 BuildRequires:	openct-devel
 BuildRequires:	openldap-devel >= 2.4.6
 BuildRequires:	openssl-devel >= 0.9.7d
-BuildRequires:	pcsc-lite-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	readline-devel
-BuildRequires:	rpmbuild(macros) >= 1.236
+BuildRequires:	rpmbuild(macros) >= 1.364
+BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # datadir is used for config files and (editable) profiles
 %define		_datadir	/etc
 %define		_sysconfdir	/etc/opensc
-%define		_plugindir	%{_libdir}/browser-plugins
-
-# TODO: galeon and skipstone.
-# use macro, otherwise extra LF inserted along with the ifarch
-%define	browsers mozilla, mozilla-firefox, konqueror, opera, seamonkey
 
 %description
 libopensc is a library for accessing SmartCard devices using PC/SC
@@ -84,8 +79,9 @@ Summary:	OpenSC Signer plugin for Mozilla
 Summary(pl.UTF-8):	Wtyczka OpenSC Signer dla Mozilli
 Group:		X11/Applications
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	browser-plugins >= 2.0
 Requires:	browser-plugins(%{_target_base_arch})
-Requires:	pinentry-gtk
+Requires:	pinentry >= 0.7.5-2
 Provides:	mozilla-plugin-opensc
 Obsoletes:	mozilla-plugin-opensc
 
@@ -103,28 +99,31 @@ Obsługiwane przeglądarki: %{browsers}.
 %setup -q
 
 %build
-touch config.rpath
 %{__libtoolize}
-%{__aclocal} -I aclocal
+%{__aclocal} -I m4
 %{__autoconf}
 %{__autoheader}
 %{__automake}
 %configure \
-	--with-pin-entry=/usr/bin/pinentry-gtk \
-	--with-plugin-dir="%{_plugindir}"
+	--enable-openct \
+	--enable-nsplugin \
+	--enable-pcsc \
+	--with-pcsc-provider=%{_libdir}/libpcsclite.so.1 \
+	--with-pin-entry=/usr/bin/pinentry \
+	--with-plugindir=%{_browserpluginsdir}
 
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_plugindir}
+install -d $RPM_BUILD_ROOT%{_browserpluginsdir}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 # just install instead of symlinking
-rm -f $RPM_BUILD_ROOT%{_plugindir}/opensc-signer.so
-mv -f $RPM_BUILD_ROOT%{_libdir}/opensc-signer.so $RPM_BUILD_ROOT%{_plugindir}
+%{__rm} $RPM_BUILD_ROOT%{_browserpluginsdir}/opensc-signer.so
+mv -f $RPM_BUILD_ROOT%{_libdir}/opensc-signer.so $RPM_BUILD_ROOT%{_browserpluginsdir}
 
 # default config
 install etc/opensc.conf $RPM_BUILD_ROOT%{_sysconfdir}
@@ -139,44 +138,17 @@ rm -rf $RPM_BUILD_ROOT
 %post	-p /sbin/ldconfig
 %postun	-p /sbin/ldconfig
 
-%triggerin -n browser-plugin-opensc -- mozilla-firefox
-%nsplugin_install -d %{_libdir}/mozilla-firefox/plugins opensc-signer.so
+%post	-n browser-plugin-opensc
+%update_browser_plugins
 
-%triggerun -n browser-plugin-opensc -- mozilla-firefox
-%nsplugin_uninstall -d %{_libdir}/mozilla-firefox/plugins opensc-signer.so
-
-%triggerin -n browser-plugin-opensc -- mozilla
-%nsplugin_install -d %{_libdir}/mozilla/plugins opensc-signer.so
-
-%triggerun -n browser-plugin-opensc -- mozilla
-%nsplugin_uninstall -d %{_libdir}/mozilla/plugins opensc-signer.so
-
-%triggerin -n browser-plugin-opensc -- opera
-%nsplugin_install -d %{_libdir}/opera/plugins opensc-signer.so
-
-%triggerun -n browser-plugin-opensc -- opera
-%nsplugin_uninstall -d %{_libdir}/opera/plugins opensc-signer.so
-
-%triggerin -n browser-plugin-opensc -- konqueror
-%nsplugin_install -d %{_libdir}/kde3/plugins/konqueror opensc-signer.so
-
-%triggerun -n browser-plugin-opensc -- konqueror
-%nsplugin_uninstall -d %{_libdir}/kde3/plugins/konqueror opensc-signer.so
-
-%triggerin -n browser-plugin-opensc -- seamonkey
-%nsplugin_install -d %{_libdir}/seamonkey/plugins opensc-signer.so
-
-%triggerun -n browser-plugin-opensc -- seamonkey
-%nsplugin_uninstall -d %{_libdir}/seamonkey/plugins opensc-signer.so
-
-# as rpm removes the old obsoleted package files after the triggers
-# are ran, add another trigger to make the links there.
-%triggerpostun -n browser-plugin-opensc -- mozilla-plugin-opensc
-%nsplugin_install -f -d %{_libdir}/mozilla/plugins opensc-signer.so
+%postun	-n browser-plugin-opensc
+if [ "$1" = "0" ]; then
+        %update_browser_plugins
+fi
 
 %files
 %defattr(644,root,root,755)
-%doc NEWS README doc/ChangeLog doc/{*.{html,css},html/tools.html}
+%doc NEWS README doc/nonpersistent/{ChangeLog,wiki.out} doc/html.out/tools.html
 %attr(755,root,root) %{_bindir}/cardos-info
 %attr(755,root,root) %{_bindir}/cryptoflex-tool
 %attr(755,root,root) %{_bindir}/eidenv
@@ -186,15 +158,21 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/piv-tool
 %attr(755,root,root) %{_bindir}/pkcs11-tool
 %attr(755,root,root) %{_bindir}/pkcs15-*
+%attr(755,root,root) %{_bindir}/rutoken-tool
 %attr(755,root,root) %{_libdir}/libopensc.so.*.*.*
-%attr(755,root,root) %{_libdir}/libpkcs15init.so.*.*.*
-%attr(755,root,root) %{_libdir}/libscconf.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libopensc.so.2
+%attr(755,root,root) %{_libdir}/libpkcs15init.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libpkcs15init.so.2
+%attr(755,root,root) %{_libdir}/libscconf.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libscconf.so.2
+# PKCS11 modules
 %attr(755,root,root) %{_libdir}/onepin-opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/pkcs11-spy.so
+%dir %{_libdir}/pkcs11
+%attr(755,root,root) %{_libdir}/pkcs11/onepin-opensc-pkcs11.so
+%attr(755,root,root) %{_libdir}/pkcs11/opensc-pkcs11.so
+%attr(755,root,root) %{_libdir}/pkcs11/pkcs11-spy.so
 %dir %{_datadir}/opensc
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*.conf
 %config(noreplace) %verify(not md5 mtime size) %{_datadir}/opensc/*.profile
@@ -209,7 +187,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%doc doc/html/api.html
+%doc doc/html.out/api.html
 %attr(755,root,root) %{_bindir}/opensc-config
 %attr(755,root,root) %{_libdir}/libopensc.so
 %attr(755,root,root) %{_libdir}/libpkcs15init.so
@@ -232,4 +210,4 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n browser-plugin-opensc
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_plugindir}/opensc-signer.so
+%attr(755,root,root) %{_browserpluginsdir}/opensc-signer.so
