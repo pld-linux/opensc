@@ -1,0 +1,3 @@
+- updated to 0.11.5 [fixes CVE-2008-2235]
+- switched to browser-plugins v2
+- switched to /usr/bin/pinentry
