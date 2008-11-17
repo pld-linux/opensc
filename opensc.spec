@@ -109,7 +109,7 @@ Obsługiwane przeglądarki: %{browsers}.
 	--enable-nsplugin \
 	--enable-pcsc \
 	--with-pcsc-provider=%{_libdir}/libpcsclite.so.1 \
-	--with-pin-entry=/usr/bin/pinentry \
+	--with-pinentry=/usr/bin/pinentry \
 	--with-plugindir=%{_browserpluginsdir}
 
 %{__make}
