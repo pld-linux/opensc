@@ -8,6 +8,10 @@ License:	LGPL v2.1+
 Group:		Applications
 Source0:	http://www.opensc-project.org/files/opensc/%{name}-%{version}.tar.gz
 # Source0-md5:	a426759f11350c32af2f17a5cd4d5938
+Source1:	%{name}-initramfs-hook
+Source2:	%{name}-initramfs-local-bottom
+Source3:	%{name}-initramfs-local-top
+Source4:	%{name}-initramfs-README
 URL:		http://www.opensc-project.org/
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.10
