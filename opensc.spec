@@ -136,7 +136,7 @@ install %{SOURCE4} README.initramfs
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_browserpluginsdir} \
-	$RPM_BUILD_ROOT%{_datadir}initramfs-tools/{hooks,scripts/local-{bottom,top}}
+	$RPM_BUILD_ROOT%{_datadir}/initramfs-tools/{hooks,scripts/local-{bottom,top}}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -148,9 +148,9 @@ mv -f $RPM_BUILD_ROOT%{_libdir}/opensc-signer.so $RPM_BUILD_ROOT%{_browserplugin
 # default config
 install etc/opensc.conf $RPM_BUILD_ROOT%{_sysconfdir}
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}initramfs-tools/hooks/opensc
-install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}initramfs-tools/scripts/local-bottom/opensc
-install %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}initramfs-tools/scripts/local-top/opensc
+install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/hooks/opensc
+install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/scripts/local-bottom/opensc
+install %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/scripts/local-top/opensc
 
 # useless (dlopened by *.so)
 rm -f $RPM_BUILD_ROOT%{_libdir}/{onepin-opensc,opensc,pkcs11}-*.{a,la} \
