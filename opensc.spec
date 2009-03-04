@@ -1,13 +1,13 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
-Version:	0.11.6
-Release:	3
+Version:	0.11.7
+Release:	1
 Epoch:		0
 License:	LGPL v2.1+
 Group:		Applications
 Source0:	http://www.opensc-project.org/files/opensc/%{name}-%{version}.tar.gz
-# Source0-md5:	a426759f11350c32af2f17a5cd4d5938
+# Source0-md5:	419e9be372c2f9bbb3ce9704c929d5ec
 Source1:	%{name}-initramfs-hook
 Source2:	%{name}-initramfs-local-bottom
 Source3:	%{name}-initramfs-local-top
@@ -174,6 +174,7 @@ fi
 %defattr(644,root,root,755)
 %doc NEWS README doc/nonpersistent/{ChangeLog,wiki.out} doc/html.out/tools.html
 %attr(755,root,root) %{_bindir}/cardos-info
+%attr(755,root,root) %{_bindir}/cardos-tool
 %attr(755,root,root) %{_bindir}/cryptoflex-tool
 %attr(755,root,root) %{_bindir}/eidenv
 %attr(755,root,root) %{_bindir}/netkey-tool
@@ -200,7 +201,7 @@ fi
 %dir %{_datadir}/opensc
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*.conf
 %config(noreplace) %verify(not md5 mtime size) %{_datadir}/opensc/*.profile
-%{_mandir}/man1/cardos-info.1*
+%{_mandir}/man1/cardos-tool.1*
 %{_mandir}/man1/cryptoflex-tool.1*
 %{_mandir}/man1/netkey-tool.1*
 %{_mandir}/man1/opensc-explorer.1*
