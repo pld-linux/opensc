@@ -21,6 +21,7 @@ BuildRequires:	libtool >= 1:1.4.2-9
 BuildRequires:	openct-devel
 BuildRequires:	openldap-devel >= 2.4.6
 BuildRequires:	openssl-devel >= 0.9.7d
+BuildRequires:	pcsc-lite-devel
 BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	readline-devel
 BuildRequires:	rpmbuild(macros) >= 1.364
