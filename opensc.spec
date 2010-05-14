@@ -15,9 +15,10 @@ Source4:	%{name}-initramfs-README
 URL:		http://www.opensc-project.org/
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.10
-BuildRequires:	libassuan-devel >= 1:0.6.0
+BuildRequires:	libassuan1-devel >= 0.6.0
 BuildRequires:	libltdl-devel
 BuildRequires:	libtool >= 1:1.4.2-9
+BuildRequires:	libxslt-progs
 BuildRequires:	openct-devel
 BuildRequires:	openldap-devel >= 2.4.6
 BuildRequires:	openssl-devel >= 0.9.7d
