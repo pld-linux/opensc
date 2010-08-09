@@ -12,22 +12,25 @@ Source1:	%{name}-initramfs-hook
 Source2:	%{name}-initramfs-local-bottom
 Source3:	%{name}-initramfs-local-top
 Source4:	%{name}-initramfs-README
+Patch0:		%{name}-libassuan-2.patch
+Patch1:		%{name}-pcsc.patch
 URL:		http://www.opensc-project.org/
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.10
-BuildRequires:	libassuan1-devel >= 0.6.0
+BuildRequires:	libassuan-devel >= 1:2.0.0
 BuildRequires:	libltdl-devel
 BuildRequires:	libtool >= 1:1.4.2-9
 BuildRequires:	libxslt-progs
 BuildRequires:	openct-devel
 BuildRequires:	openldap-devel >= 2.4.6
 BuildRequires:	openssl-devel >= 0.9.7d
-BuildRequires:	pcsc-lite-devel
+BuildRequires:	pcsc-lite-devel >= 1.6.0
 BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	readline-devel
 BuildRequires:	rpmbuild(macros) >= 1.364
 BuildRequires:	xorg-lib-libXt-devel
 BuildRequires:	zlib-devel
+Requires:	pcsc-lite-libs >= 1.6.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # datadir is used for config files and (editable) profiles
@@ -61,7 +64,7 @@ Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libltdl-devel
 Requires:	openct-devel
 Requires:	openssl-devel
-Requires:	pcsc-lite-devel
+Requires:	pcsc-lite-devel >= 1.6.0
 
 %description devel
 OpenSC development files.
@@ -117,6 +120,8 @@ Skrypty dla initramfs-tools ze wsparciem dla OpenSC.
 
 %prep
 %setup -q
+%patch0 -p1
+%patch1 -p1
 
 install %{SOURCE4} README.initramfs
 
@@ -187,6 +192,7 @@ fi
 %attr(755,root,root) %{_bindir}/pkcs11-tool
 %attr(755,root,root) %{_bindir}/pkcs15-*
 %attr(755,root,root) %{_bindir}/rutoken-tool
+%attr(755,root,root) %{_bindir}/westcos-tool
 %attr(755,root,root) %{_libdir}/libopensc.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libopensc.so.2
 %attr(755,root,root) %{_libdir}/libpkcs15init.so.*.*.*
@@ -202,7 +208,7 @@ fi
 %attr(755,root,root) %{_libdir}/pkcs11/opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/pkcs11/pkcs11-spy.so
 %dir %{_datadir}/opensc
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/opensc.conf
 %config(noreplace) %verify(not md5 mtime size) %{_datadir}/opensc/*.profile
 %{_mandir}/man1/cardos-tool.1*
 %{_mandir}/man1/cryptoflex-tool.1*
@@ -211,6 +217,7 @@ fi
 %{_mandir}/man1/opensc-tool.1*
 %{_mandir}/man1/pkcs11-tool.1*
 %{_mandir}/man1/pkcs15-*.1*
+%{_mandir}/man1/westcos-tool.1*
 %{_mandir}/man5/pkcs15-profile.5*
 
 %files devel
