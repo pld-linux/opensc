@@ -126,9 +126,6 @@ install -d $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/{hooks,scripts/local-{bott
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-# default config
-#install etc/opensc.conf $RPM_BUILD_ROOT%{_sysconfdir}
-
 install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/hooks/opensc
 install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/scripts/local-bottom/opensc
 install %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/scripts/local-top/opensc
