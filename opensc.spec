@@ -1,36 +1,39 @@
+#
+# Conditional build:
+%bcond_without	openct	# use PCSC directly, without OpenCT support
+#
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
-Version:	0.11.13
-Release:	2
+Version:	0.12.0
+Release:	1
 Epoch:		0
 License:	LGPL v2.1+
 Group:		Applications
 Source0:	http://www.opensc-project.org/files/opensc/%{name}-%{version}.tar.gz
-# Source0-md5:	98fa151e947941f9c3f27420fdf47c11
+# Source0-md5:	630fa3b8717d22a1d069d120153a0c52
 Source1:	%{name}-initramfs-hook
 Source2:	%{name}-initramfs-local-bottom
 Source3:	%{name}-initramfs-local-top
 Source4:	%{name}-initramfs-README
-Patch0:		%{name}-libassuan-2.patch
-Patch1:		%{name}-pcsc.patch
 URL:		http://www.opensc-project.org/
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.10
-BuildRequires:	libassuan-devel >= 1:2.0.0
+BuildRequires:	docbook-style-xsl
 BuildRequires:	libltdl-devel
 BuildRequires:	libtool >= 1:1.4.2-9
 BuildRequires:	libxslt-progs
-BuildRequires:	openct-devel
+%{?with_openct:BuildRequires:	openct-devel}
 BuildRequires:	openldap-devel >= 2.4.6
 BuildRequires:	openssl-devel >= 0.9.7d
-BuildRequires:	pcsc-lite-devel >= 1.6.0
+%{!?with_openct:BuildRequires:	pcsc-lite-devel >= 1.6.0}
 BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	readline-devel
 BuildRequires:	rpmbuild(macros) >= 1.364
-BuildRequires:	xorg-lib-libXt-devel
 BuildRequires:	zlib-devel
-Requires:	pcsc-lite-libs >= 1.6.0
+%{!?with_openct:Requires:	pcsc-lite-libs >= 1.6.0}
+Obsoletes:	browser-plugin-opensc
+Obsoletes:	mozilla-plugin-opensc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # datadir is used for config files and (editable) profiles
@@ -62,9 +65,9 @@ Summary(pl.UTF-8):	Pliki dla programistów używających OpenSC
 Group:		Development/Tools
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libltdl-devel
-Requires:	openct-devel
+%{?with_openct:Requires:	openct-devel}
 Requires:	openssl-devel
-Requires:	pcsc-lite-devel >= 1.6.0
+%{!?with_openct:Requires:	pcsc-lite-devel >= 1.6.0}
 
 %description devel
 OpenSC development files.
@@ -73,37 +76,16 @@ OpenSC development files.
 Pliki dla programistów używających OpenSC.
 
 %package static
-Summary:	Static OpenSC libraries
-Summary(pl.UTF-8):	Bibloteki statyczne OpenSC
+Summary:	Static OpenSC library
+Summary(pl.UTF-8):	Bibloteka statyczna OpenSC
 Group:		Development/Tools
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
-Static OpenSC libraries.
+Static OpenSC library.
 
 %description static -l pl.UTF-8
-Statyczne biblioteki OpenSC.
-
-%package -n browser-plugin-opensc
-Summary:	OpenSC Signer plugin for Mozilla
-Summary(pl.UTF-8):	Wtyczka OpenSC Signer dla Mozilli
-Group:		X11/Applications
-Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	browser-plugins >= 2.0
-Requires:	browser-plugins(%{_target_base_arch})
-Requires:	pinentry >= 0.7.5-2
-Provides:	mozilla-plugin-opensc
-Obsoletes:	mozilla-plugin-opensc
-
-%description -n browser-plugin-opensc
-OpenSC Signer browser plugin.
-
-Supported browsers: %{browsers}.
-
-%description -n browser-plugin-opensc -l pl.UTF-8
-Wtyczka OpenSC Signer dla przeglądarek.
-
-Obsługiwane przeglądarki: %{browsers}.
+Biblioteka statyczna OpenSC.
 
 %package initramfs
 Summary:	OpenSC support scripts for initramfs-tools
@@ -120,8 +102,6 @@ Skrypty dla initramfs-tools ze wsparciem dla OpenSC.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
 
 install %{SOURCE4} README.initramfs
 
@@ -132,37 +112,29 @@ install %{SOURCE4} README.initramfs
 %{__autoheader}
 %{__automake}
 %configure \
-	--enable-openct \
-	--enable-nsplugin \
-	--enable-pcsc \
-	--with-pcsc-provider=%{_libdir}/libpcsclite.so.1 \
-	--with-pinentry=/usr/bin/pinentry \
-	--with-plugindir=%{_browserpluginsdir}
+	%{?with_openct:--enable-openct --disable-pcsc} \
+	%{!?with_openct:--enable-pcsc --disable-openct} \
+	--enable-doc \
+	--with-pcsc-provider=%{_libdir}/libpcsclite.so.1
 
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_browserpluginsdir} \
-	$RPM_BUILD_ROOT%{_datadir}/initramfs-tools/{hooks,scripts/local-{bottom,top}}
+install -d $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/{hooks,scripts/local-{bottom,top}}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-# just install instead of symlinking
-%{__rm} $RPM_BUILD_ROOT%{_browserpluginsdir}/opensc-signer.so
-mv -f $RPM_BUILD_ROOT%{_libdir}/opensc-signer.so $RPM_BUILD_ROOT%{_browserpluginsdir}
-
 # default config
-install etc/opensc.conf $RPM_BUILD_ROOT%{_sysconfdir}
+#install etc/opensc.conf $RPM_BUILD_ROOT%{_sysconfdir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/hooks/opensc
 install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/scripts/local-bottom/opensc
 install %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/scripts/local-top/opensc
 
-# useless (dlopened by *.so)
-rm -f $RPM_BUILD_ROOT%{_libdir}/{onepin-opensc,opensc,pkcs11}-*.{a,la} \
-	$RPM_BUILD_ROOT%{_libdir}/opensc/*.{a,la}
+# not needed (dlopened by soname)
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/{onepin-opensc-pkcs11,opensc-pkcs11,pkcs11-spy}.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -170,18 +142,9 @@ rm -rf $RPM_BUILD_ROOT
 %post	-p /sbin/ldconfig
 %postun	-p /sbin/ldconfig
 
-%post	-n browser-plugin-opensc
-%update_browser_plugins
-
-%postun	-n browser-plugin-opensc
-if [ "$1" = "0" ]; then
-        %update_browser_plugins
-fi
-
 %files
 %defattr(644,root,root,755)
-%doc NEWS README doc/nonpersistent/{ChangeLog,wiki.out} doc/html.out/tools.html
-%attr(755,root,root) %{_bindir}/cardos-info
+%doc ChangeLog NEWS README doc/html.out/tools.html
 %attr(755,root,root) %{_bindir}/cardos-tool
 %attr(755,root,root) %{_bindir}/cryptoflex-tool
 %attr(755,root,root) %{_bindir}/eidenv
@@ -190,15 +153,13 @@ fi
 %attr(755,root,root) %{_bindir}/opensc-tool
 %attr(755,root,root) %{_bindir}/piv-tool
 %attr(755,root,root) %{_bindir}/pkcs11-tool
-%attr(755,root,root) %{_bindir}/pkcs15-*
+%attr(755,root,root) %{_bindir}/pkcs15-crypt
+%attr(755,root,root) %{_bindir}/pkcs15-init
+%attr(755,root,root) %{_bindir}/pkcs15-tool
 %attr(755,root,root) %{_bindir}/rutoken-tool
 %attr(755,root,root) %{_bindir}/westcos-tool
 %attr(755,root,root) %{_libdir}/libopensc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libopensc.so.2
-%attr(755,root,root) %{_libdir}/libpkcs15init.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libpkcs15init.so.2
-%attr(755,root,root) %{_libdir}/libscconf.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libscconf.so.2
+%attr(755,root,root) %ghost %{_libdir}/libopensc.so.3
 # PKCS11 modules
 %attr(755,root,root) %{_libdir}/onepin-opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/opensc-pkcs11.so
@@ -216,36 +177,20 @@ fi
 %{_mandir}/man1/opensc-explorer.1*
 %{_mandir}/man1/opensc-tool.1*
 %{_mandir}/man1/pkcs11-tool.1*
-%{_mandir}/man1/pkcs15-*.1*
+%{_mandir}/man1/pkcs15-crypt.1*
+%{_mandir}/man1/pkcs15-init.1*
+%{_mandir}/man1/pkcs15-tool.1*
 %{_mandir}/man1/westcos-tool.1*
 %{_mandir}/man5/pkcs15-profile.5*
 
 %files devel
 %defattr(644,root,root,755)
-%doc doc/html.out/api.html
-%attr(755,root,root) %{_bindir}/opensc-config
 %attr(755,root,root) %{_libdir}/libopensc.so
-%attr(755,root,root) %{_libdir}/libpkcs15init.so
-%attr(755,root,root) %{_libdir}/libscconf.so
 %{_libdir}/libopensc.la
-%{_libdir}/libpkcs15init.la
-%{_libdir}/libscconf.la
-%{_includedir}/opensc
-%{_pkgconfigdir}/libopensc.pc
-%{_pkgconfigdir}/libpkcs15init.pc
-%{_pkgconfigdir}/libscconf.pc
-%{_mandir}/man1/opensc-config.1*
-%{_mandir}/man3/sc_*.3*
 
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libopensc.a
-%{_libdir}/libpkcs15init.a
-%{_libdir}/libscconf.a
-
-%files -n browser-plugin-opensc
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_browserpluginsdir}/opensc-signer.so
 
 %files initramfs
 %defattr(644,root,root,755)
