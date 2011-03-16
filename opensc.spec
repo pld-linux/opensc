@@ -1,12 +1,12 @@
 #
 # Conditional build:
-%bcond_without	openct	# use PCSC directly, without OpenCT support
-#
+%bcond_with		openct	# use PCSC directly, without OpenCT support
+
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
 Version:	0.12.0
-Release:	1
+Release:	2
 Epoch:		0
 License:	LGPL v2.1+
 Group:		Applications
@@ -102,8 +102,7 @@ Skrypty dla initramfs-tools ze wsparciem dla OpenSC.
 
 %prep
 %setup -q
-
-install %{SOURCE4} README.initramfs
+cp -p %{SOURCE4} README.initramfs
 
 %build
 %{__libtoolize}
@@ -122,16 +121,17 @@ install %{SOURCE4} README.initramfs
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/{hooks,scripts/local-{bottom,top}}
-
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/hooks/opensc
-install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/scripts/local-bottom/opensc
-install %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/scripts/local-top/opensc
+install -p %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/hooks/opensc
+install -p %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/scripts/local-bottom/opensc
+install -p %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/scripts/local-top/opensc
 
 # not needed (dlopened by soname)
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/{onepin-opensc-pkcs11,opensc-pkcs11,pkcs11-spy}.la
+
+rm -rf $RPM_BUILD_ROOT%{_docdir}/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
