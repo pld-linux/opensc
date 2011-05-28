@@ -1,17 +1,17 @@
 #
 # Conditional build:
-%bcond_with		openct	# use PCSC directly, without OpenCT support
-
+%bcond_with	openct	# use OpenCT instead of PC/SC for reader access
+#
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
-Version:	0.12.0
-Release:	2
+Version:	0.12.1
+Release:	1
 Epoch:		0
 License:	LGPL v2.1+
 Group:		Applications
 Source0:	http://www.opensc-project.org/files/opensc/%{name}-%{version}.tar.gz
-# Source0-md5:	630fa3b8717d22a1d069d120153a0c52
+# Source0-md5:	62fe8d3ed1864556c1970d7c23d8d58e
 Source1:	%{name}-initramfs-hook
 Source2:	%{name}-initramfs-local-bottom
 Source3:	%{name}-initramfs-local-top
@@ -131,7 +131,7 @@ install -p %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/scripts/local-t
 # not needed (dlopened by soname)
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/{onepin-opensc-pkcs11,opensc-pkcs11,pkcs11-spy}.la
 
-rm -rf $RPM_BUILD_ROOT%{_docdir}/%{name}
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -153,7 +153,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/pkcs15-crypt
 %attr(755,root,root) %{_bindir}/pkcs15-init
 %attr(755,root,root) %{_bindir}/pkcs15-tool
-%attr(755,root,root) %{_bindir}/rutoken-tool
 %attr(755,root,root) %{_bindir}/westcos-tool
 %attr(755,root,root) %{_libdir}/libopensc.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libopensc.so.3
@@ -170,9 +169,11 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not md5 mtime size) %{_datadir}/opensc/*.profile
 %{_mandir}/man1/cardos-tool.1*
 %{_mandir}/man1/cryptoflex-tool.1*
+%{_mandir}/man1/eidenv.1*
 %{_mandir}/man1/netkey-tool.1*
 %{_mandir}/man1/opensc-explorer.1*
 %{_mandir}/man1/opensc-tool.1*
+%{_mandir}/man1/piv-tool.1*
 %{_mandir}/man1/pkcs11-tool.1*
 %{_mandir}/man1/pkcs15-crypt.1*
 %{_mandir}/man1/pkcs15-init.1*
