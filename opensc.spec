@@ -5,13 +5,13 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
-Version:	0.12.1
+Version:	0.12.2
 Release:	1
 Epoch:		0
 License:	LGPL v2.1+
 Group:		Applications
 Source0:	http://www.opensc-project.org/files/opensc/%{name}-%{version}.tar.gz
-# Source0-md5:	62fe8d3ed1864556c1970d7c23d8d58e
+# Source0-md5:	5116adea5f2f9f22fb9896965789144b
 Source1:	%{name}-initramfs-hook
 Source2:	%{name}-initramfs-local-bottom
 Source3:	%{name}-initramfs-local-top
@@ -113,6 +113,7 @@ cp -p %{SOURCE4} README.initramfs
 %configure \
 	%{?with_openct:--enable-openct --disable-pcsc} \
 	%{!?with_openct:--enable-pcsc --disable-openct} \
+	--disable-silent-rules \
 	--enable-doc \
 	--with-pcsc-provider=%{_libdir}/libpcsclite.so.1
 
