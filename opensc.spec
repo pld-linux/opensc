@@ -24,7 +24,6 @@ BuildRequires:	libltdl-devel
 BuildRequires:	libtool >= 1:1.4.2-9
 BuildRequires:	libxslt-progs
 %{?with_openct:BuildRequires:	openct-devel}
-BuildRequires:	openldap-devel >= 2.4.6
 BuildRequires:	openssl-devel >= 0.9.7d
 %{!?with_openct:BuildRequires:	pcsc-lite-devel >= 1.6.0}
 BuildRequires:	pkgconfig >= 1:0.9.0
