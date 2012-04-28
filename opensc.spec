@@ -102,8 +102,9 @@ Biblioteka statyczna OpenSC.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_libdir}/pkcs11}
 
-%{__make} -j1 install \
+%{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 # not needed (dlopened by soname)
