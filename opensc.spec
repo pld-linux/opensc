@@ -6,16 +6,12 @@ Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
 Version:	0.12.2
-Release:	1
+Release:	2
 Epoch:		0
 License:	LGPL v2.1+
 Group:		Applications
 Source0:	http://www.opensc-project.org/files/opensc/%{name}-%{version}.tar.gz
 # Source0-md5:	5116adea5f2f9f22fb9896965789144b
-Source1:	%{name}-initramfs-hook
-Source2:	%{name}-initramfs-local-bottom
-Source3:	%{name}-initramfs-local-top
-Source4:	%{name}-initramfs-README
 URL:		http://www.opensc-project.org/
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.10
@@ -86,22 +82,8 @@ Static OpenSC library.
 %description static -l pl.UTF-8
 Biblioteka statyczna OpenSC.
 
-%package initramfs
-Summary:	OpenSC support scripts for initramfs-tools
-Summary(pl.UTF-8):	Skrypty dla initramfs-tools ze wsparciem dla OpenSC
-Group:		Base
-Requires:	%{name} = %{version}-%{release}
-Requires:	initramfs-tools
-
-%description initramfs
-OpenSC support scripts for initramfs-tools.
-
-%description initramfs -l pl.UTF-8
-Skrypty dla initramfs-tools ze wsparciem dla OpenSC.
-
 %prep
 %setup -q
-cp -p %{SOURCE4} README.initramfs
 
 %build
 %{__libtoolize}
@@ -120,13 +102,8 @@ cp -p %{SOURCE4} README.initramfs
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/{hooks,scripts/local-{bottom,top}}
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
-
-install -p %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/hooks/opensc
-install -p %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/scripts/local-bottom/opensc
-install -p %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/initramfs-tools/scripts/local-top/opensc
 
 # not needed (dlopened by soname)
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/{onepin-opensc-pkcs11,opensc-pkcs11,pkcs11-spy}.la
@@ -189,10 +166,3 @@ rm -rf $RPM_BUILD_ROOT
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libopensc.a
-
-%files initramfs
-%defattr(644,root,root,755)
-%doc README.initramfs
-%attr(755,root,root) %{_datadir}/initramfs-tools/hooks/opensc
-%attr(755,root,root) %{_datadir}/initramfs-tools/scripts/local-top/opensc
-%attr(755,root,root) %{_datadir}/initramfs-tools/scripts/local-bottom/opensc
