@@ -1,0 +1,20 @@
+--- opensc-0.13.0/src/libopensc/libopensc.pc.in.orig	2012-12-04 15:43:40.000000000 +0100
++++ opensc-0.13.0/src/libopensc/libopensc.pc.in	2013-12-30 14:13:18.153385160 +0100
+@@ -6,6 +6,7 @@
+ Name: libopensc
+ Description: libopensc
+ Version: @VERSION@
+-Libs: -L${libdir} -lopensc -lscconf
++Libs: -L${libdir} -lopensc
++Libs.private: @OPTIONAL_OPENSSL_LIBS@ @OPTIONAL_OPENCT_LIBS@ @OPTIONAL_ZLIB_LIBS@ -ldl
+ Cflags: -I${includedir}
+ 
+--- opensc-0.13.0/src/libopensc/Makefile.am.orig	2012-12-04 15:43:40.000000000 +0100
++++ opensc-0.13.0/src/libopensc/Makefile.am	2013-12-30 14:18:59.320037508 +0100
+@@ -71,3 +71,6 @@
+ mylib_DATA=.libs/@WIN_LIBPREFIX@opensc-@OPENSC_LT_OLDEST@.dll.def
+ .libs/@WIN_LIBPREFIX@opensc-@OPENSC_LT_OLDEST@.dll.def:	libopensc.la
+ endif
++
++pkgconfigdir = $(libdir)/pkgconfig
++nodist_pkgconfig_DATA = libopensc.pc

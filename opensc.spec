@@ -5,14 +5,15 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
-Version:	0.12.2
-Release:	2
+Version:	0.13.0
+Release:	1
 Epoch:		0
 License:	LGPL v2.1+
 Group:		Applications
-Source0:	http://www.opensc-project.org/files/opensc/%{name}-%{version}.tar.gz
-# Source0-md5:	5116adea5f2f9f22fb9896965789144b
-URL:		http://www.opensc-project.org/
+Source0:	http://downloads.sourceforge.net/opensc/%{name}-%{version}.tar.gz
+# Source0-md5:	74a10de6c646bdaae307d6dc9e9accc0
+Patch0:		%{name}-pc.patch
+URL:		https://github.com/OpenSC/OpenSC/wiki
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.10
 BuildRequires:	docbook-style-xsl
@@ -26,6 +27,7 @@ BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	readline-devel
 BuildRequires:	rpmbuild(macros) >= 1.364
 BuildRequires:	zlib-devel
+Requires:	filesystem >= 4.0-28
 %{!?with_openct:Requires:	pcsc-lite-libs >= 1.6.0}
 Obsoletes:	browser-plugin-opensc
 Obsoletes:	mozilla-plugin-opensc
@@ -84,6 +86,7 @@ Biblioteka statyczna OpenSC.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__libtoolize}
@@ -108,7 +111,9 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_libdir}/pkcs11}
 	DESTDIR=$RPM_BUILD_ROOT
 
 # not needed (dlopened by soname)
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/{onepin-opensc-pkcs11,opensc-pkcs11,pkcs11-spy}.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/{opensc-pkcs11,pkcs11-spy}.la
+# obsoleted by pkg-config
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libopensc.la
 
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}
 
@@ -120,11 +125,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc ChangeLog NEWS README doc/html.out/tools.html
+%doc ChangeLog NEWS README doc/tools/tools.html
 %attr(755,root,root) %{_bindir}/cardos-tool
 %attr(755,root,root) %{_bindir}/cryptoflex-tool
 %attr(755,root,root) %{_bindir}/eidenv
+%attr(755,root,root) %{_bindir}/iasecc-tool
 %attr(755,root,root) %{_bindir}/netkey-tool
+%attr(755,root,root) %{_bindir}/openpgp-tool
 %attr(755,root,root) %{_bindir}/opensc-explorer
 %attr(755,root,root) %{_bindir}/opensc-tool
 %attr(755,root,root) %{_bindir}/piv-tool
@@ -132,15 +139,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/pkcs15-crypt
 %attr(755,root,root) %{_bindir}/pkcs15-init
 %attr(755,root,root) %{_bindir}/pkcs15-tool
+%attr(755,root,root) %{_bindir}/sc-hsm-tool
 %attr(755,root,root) %{_bindir}/westcos-tool
 %attr(755,root,root) %{_libdir}/libopensc.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libopensc.so.3
 # PKCS11 modules
-%attr(755,root,root) %{_libdir}/onepin-opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/pkcs11-spy.so
-%dir %{_libdir}/pkcs11
-%attr(755,root,root) %{_libdir}/pkcs11/onepin-opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/pkcs11/opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/pkcs11/pkcs11-spy.so
 %dir %{_datadir}/opensc
@@ -149,7 +154,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/cardos-tool.1*
 %{_mandir}/man1/cryptoflex-tool.1*
 %{_mandir}/man1/eidenv.1*
+%{_mandir}/man1/iasecc-tool.1*
 %{_mandir}/man1/netkey-tool.1*
+%{_mandir}/man1/openpgp-tool.1*
 %{_mandir}/man1/opensc-explorer.1*
 %{_mandir}/man1/opensc-tool.1*
 %{_mandir}/man1/piv-tool.1*
@@ -157,13 +164,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/pkcs15-crypt.1*
 %{_mandir}/man1/pkcs15-init.1*
 %{_mandir}/man1/pkcs15-tool.1*
+%{_mandir}/man1/sc-hsm-tool.1*
 %{_mandir}/man1/westcos-tool.1*
 %{_mandir}/man5/pkcs15-profile.5*
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libopensc.so
-%{_libdir}/libopensc.la
+%{_pkgconfigdir}/libopensc.pc
 
 %files static
 %defattr(644,root,root,755)
