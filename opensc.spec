@@ -5,13 +5,13 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
-Version:	0.13.0
+Version:	0.14.0
 Release:	1
 Epoch:		0
 License:	LGPL v2.1+
 Group:		Applications
 Source0:	http://downloads.sourceforge.net/opensc/%{name}-%{version}.tar.gz
-# Source0-md5:	74a10de6c646bdaae307d6dc9e9accc0
+# Source0-md5:	8e99885dbe28a9c71d5140f0105c56ff
 Patch0:		%{name}-pc.patch
 URL:		https://github.com/OpenSC/OpenSC/wiki
 BuildRequires:	autoconf >= 2.60
@@ -63,8 +63,9 @@ Group:		Development/Tools
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libltdl-devel
 %{?with_openct:Requires:	openct-devel}
-Requires:	openssl-devel
+Requires:	openssl-devel >= 0.9.7d
 %{!?with_openct:Requires:	pcsc-lite-devel >= 1.6.0}
+Requires:	zlib-devel
 
 %description devel
 OpenSC development files.
@@ -111,9 +112,9 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_libdir}/pkcs11}
 	DESTDIR=$RPM_BUILD_ROOT
 
 # not needed (dlopened by soname)
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/{opensc-pkcs11,pkcs11-spy}.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/{onepin-opensc-pkcs11,opensc-pkcs11,pkcs11-spy}.la
 # obsoleted by pkg-config
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libopensc.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/lib{opensc,smm-local}.la
 
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}
 
@@ -128,6 +129,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc ChangeLog NEWS README doc/tools/tools.html
 %attr(755,root,root) %{_bindir}/cardos-tool
 %attr(755,root,root) %{_bindir}/cryptoflex-tool
+%attr(755,root,root) %{_bindir}/dnie-tool
 %attr(755,root,root) %{_bindir}/eidenv
 %attr(755,root,root) %{_bindir}/iasecc-tool
 %attr(755,root,root) %{_bindir}/netkey-tool
@@ -143,9 +145,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/westcos-tool
 %attr(755,root,root) %{_libdir}/libopensc.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libopensc.so.3
+%attr(755,root,root) %{_libdir}/libsmm-local.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsmm-local.so.3
 # PKCS11 modules
+%attr(755,root,root) %{_libdir}/onepin-opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/pkcs11-spy.so
+%attr(755,root,root) %{_libdir}/pkcs11/onepin-opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/pkcs11/opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/pkcs11/pkcs11-spy.so
 %dir %{_datadir}/opensc
@@ -171,8 +177,10 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libopensc.so
+%attr(755,root,root) %{_libdir}/libsmm-local.so
 %{_pkgconfigdir}/libopensc.pc
 
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libopensc.a
+%{_libdir}/libsmm-local.a
