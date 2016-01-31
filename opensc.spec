@@ -5,14 +5,15 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
-Version:	0.14.0
+Version:	0.15.0
 Release:	1
 Epoch:		0
 License:	LGPL v2.1+
 Group:		Applications
 Source0:	http://downloads.sourceforge.net/opensc/%{name}-%{version}.tar.gz
-# Source0-md5:	8e99885dbe28a9c71d5140f0105c56ff
+# Source0-md5:	01e6b803865f7b7574ee65a7b2d63c17
 Patch0:		%{name}-pc.patch
+Patch1:		%{name}-missing.patch
 URL:		https://github.com/OpenSC/OpenSC/wiki
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.10
@@ -85,9 +86,22 @@ Static OpenSC library.
 %description static -l pl.UTF-8
 Biblioteka statyczna OpenSC.
 
+%package -n bash-completion-opensc
+Summary:	Bash completion for OpenSC commands
+Summary(pl.UTF-8):	Bashowe uzupełnianie parametrów poleceń OpenSC
+Group:		Applications/Shells
+Requires:	%{name} = %{version}-%{release}
+
+%description -n bash-completion-opensc
+Bash completion for OpenSC commands.
+
+%description -n bash-completion-opensc -l pl.UTF-8
+Bashowe uzupełnianie parametrów poleceń OpenSC.
+
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 %{__libtoolize}
@@ -109,7 +123,8 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_libdir}/pkcs11}
 
 %{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+	DESTDIR=$RPM_BUILD_ROOT \
+	completiondir=/etc/bash_completion.d
 
 # not needed (dlopened by soname)
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/{onepin-opensc-pkcs11,opensc-pkcs11,pkcs11-spy}.la
@@ -159,6 +174,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not md5 mtime size) %{_datadir}/opensc/*.profile
 %{_mandir}/man1/cardos-tool.1*
 %{_mandir}/man1/cryptoflex-tool.1*
+%{_mandir}/man1/dnie-tool.1*
 %{_mandir}/man1/eidenv.1*
 %{_mandir}/man1/iasecc-tool.1*
 %{_mandir}/man1/netkey-tool.1*
@@ -184,3 +200,22 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libopensc.a
 %{_libdir}/libsmm-local.a
+
+%files -n bash-completion-opensc
+%defattr(644,root,root,755)
+/etc/bash_completion.d/cardos-tool
+/etc/bash_completion.d/cryptoflex-tool
+/etc/bash_completion.d/dnie-tool
+/etc/bash_completion.d/eidenv
+/etc/bash_completion.d/iasecc-tool
+/etc/bash_completion.d/netkey-tool
+/etc/bash_completion.d/openpgp-tool
+/etc/bash_completion.d/opensc-explorer
+/etc/bash_completion.d/opensc-tool
+/etc/bash_completion.d/piv-tool
+/etc/bash_completion.d/pkcs11-tool
+/etc/bash_completion.d/pkcs15-crypt
+/etc/bash_completion.d/pkcs15-init
+/etc/bash_completion.d/pkcs15-tool
+/etc/bash_completion.d/sc-hsm-tool
+/etc/bash_completion.d/westcos-tool
