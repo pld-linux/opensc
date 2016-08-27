@@ -5,15 +5,14 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
-Version:	0.15.0
+Version:	0.16.0
 Release:	1
 Epoch:		0
 License:	LGPL v2.1+
 Group:		Applications
 Source0:	http://downloads.sourceforge.net/opensc/%{name}-%{version}.tar.gz
-# Source0-md5:	01e6b803865f7b7574ee65a7b2d63c17
+# Source0-md5:	724d128f23cd7a74b28d04300ce7bcbd
 Patch0:		%{name}-pc.patch
-Patch1:		%{name}-missing.patch
 URL:		https://github.com/OpenSC/OpenSC/wiki
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.10
@@ -101,7 +100,6 @@ Bashowe uzupełnianie parametrów poleceń OpenSC.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 
 %build
 %{__libtoolize}
@@ -141,11 +139,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc ChangeLog NEWS README doc/tools/tools.html
+%doc NEWS README doc/tools/tools.html
 %attr(755,root,root) %{_bindir}/cardos-tool
 %attr(755,root,root) %{_bindir}/cryptoflex-tool
 %attr(755,root,root) %{_bindir}/dnie-tool
 %attr(755,root,root) %{_bindir}/eidenv
+%attr(755,root,root) %{_bindir}/gids-tool
 %attr(755,root,root) %{_bindir}/iasecc-tool
 %attr(755,root,root) %{_bindir}/netkey-tool
 %attr(755,root,root) %{_bindir}/openpgp-tool
@@ -159,9 +158,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/sc-hsm-tool
 %attr(755,root,root) %{_bindir}/westcos-tool
 %attr(755,root,root) %{_libdir}/libopensc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libopensc.so.3
+%attr(755,root,root) %ghost %{_libdir}/libopensc.so.4
 %attr(755,root,root) %{_libdir}/libsmm-local.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libsmm-local.so.3
+%attr(755,root,root) %ghost %{_libdir}/libsmm-local.so.4
 # PKCS11 modules
 %attr(755,root,root) %{_libdir}/onepin-opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/opensc-pkcs11.so
@@ -176,6 +175,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/cryptoflex-tool.1*
 %{_mandir}/man1/dnie-tool.1*
 %{_mandir}/man1/eidenv.1*
+%{_mandir}/man1/gids-tool.1*
 %{_mandir}/man1/iasecc-tool.1*
 %{_mandir}/man1/netkey-tool.1*
 %{_mandir}/man1/openpgp-tool.1*
@@ -207,6 +207,7 @@ rm -rf $RPM_BUILD_ROOT
 /etc/bash_completion.d/cryptoflex-tool
 /etc/bash_completion.d/dnie-tool
 /etc/bash_completion.d/eidenv
+/etc/bash_completion.d/gids-tool
 /etc/bash_completion.d/iasecc-tool
 /etc/bash_completion.d/netkey-tool
 /etc/bash_completion.d/openpgp-tool
