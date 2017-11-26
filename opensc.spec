@@ -1,18 +1,18 @@
 #
 # Conditional build:
-%bcond_with	openct	# use OpenCT instead of PC/SC for reader access
+%bcond_with	openct		# use OpenCT instead of PC/SC for reader access
+%bcond_without	openpace	# OpenPACE support
 #
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
-Version:	0.16.0
-Release:	2
-Epoch:		0
+Version:	0.17.0
+Release:	1
 License:	LGPL v2.1+
 Group:		Applications
-Source0:	http://downloads.sourceforge.net/opensc/%{name}-%{version}.tar.gz
-# Source0-md5:	724d128f23cd7a74b28d04300ce7bcbd
-Patch0:		%{name}-pc.patch
+#Source0Download: https://github.com/OpenSC/OpenSC/releases
+Source0:	https://github.com/OpenSC/OpenSC/releases/download/%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	fc502ed7753f950b8e2a18a476d0cd52
 URL:		https://github.com/OpenSC/OpenSC/wiki
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.10
@@ -21,14 +21,16 @@ BuildRequires:	libltdl-devel
 BuildRequires:	libtool >= 1:1.4.2-9
 BuildRequires:	libxslt-progs
 %{?with_openct:BuildRequires:	openct-devel}
+%{?with_openpace:BuildRequires:	openpace-devel >= 0.9}
 BuildRequires:	openssl-devel >= 0.9.7d
-%{!?with_openct:BuildRequires:	pcsc-lite-devel >= 1.6.0}
+%{!?with_openct:BuildRequires:	pcsc-lite-devel >= 1.8.22}
 BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	readline-devel
 BuildRequires:	rpmbuild(macros) >= 1.364
 BuildRequires:	zlib-devel
 Requires:	filesystem >= 4.0-28
-%{!?with_openct:Requires:	pcsc-lite-libs >= 1.6.0}
+%{?with_openpace:Requires:	openpace >= 0.9}
+%{!?with_openct:Requires:	pcsc-lite-libs >= 1.8.22}
 Obsoletes:	browser-plugin-opensc
 Obsoletes:	mozilla-plugin-opensc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -60,11 +62,11 @@ IDentity) produkowanych przez Setec.
 Summary:	OpenSC development files
 Summary(pl.UTF-8):	Pliki dla programistów używających OpenSC
 Group:		Development/Tools
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	libltdl-devel
 %{?with_openct:Requires:	openct-devel}
 Requires:	openssl-devel >= 0.9.7d
-%{!?with_openct:Requires:	pcsc-lite-devel >= 1.6.0}
+%{!?with_openct:Requires:	pcsc-lite-devel >= 1.8.22}
 Requires:	zlib-devel
 
 %description devel
@@ -77,7 +79,7 @@ Pliki dla programistów używających OpenSC.
 Summary:	Static OpenSC library
 Summary(pl.UTF-8):	Bibloteka statyczna OpenSC
 Group:		Development/Tools
-Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
+Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 Static OpenSC library.
@@ -99,7 +101,6 @@ Bashowe uzupełnianie parametrów poleceń OpenSC.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %{__libtoolize}
@@ -110,6 +111,7 @@ Bashowe uzupełnianie parametrów poleceń OpenSC.
 %configure \
 	%{?with_openct:--enable-openct --disable-pcsc} \
 	%{!?with_openct:--enable-pcsc --disable-openct} \
+	%{!?with_openpace:--disable-openpace} \
 	--disable-silent-rules \
 	--enable-doc \
 	--with-pcsc-provider=%{_libdir}/libpcsclite.so.1
@@ -126,7 +128,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_libdir}/pkcs11}
 
 # not needed (dlopened by soname)
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/{onepin-opensc-pkcs11,opensc-pkcs11,pkcs11-spy}.la
-# obsoleted by pkg-config
+# API not exported
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/lib{opensc,smm-local}.la
 
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}
@@ -147,6 +149,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gids-tool
 %attr(755,root,root) %{_bindir}/iasecc-tool
 %attr(755,root,root) %{_bindir}/netkey-tool
+%attr(755,root,root) %{_bindir}/npa-tool
 %attr(755,root,root) %{_bindir}/openpgp-tool
 %attr(755,root,root) %{_bindir}/opensc-explorer
 %attr(755,root,root) %{_bindir}/opensc-tool
@@ -158,9 +161,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/sc-hsm-tool
 %attr(755,root,root) %{_bindir}/westcos-tool
 %attr(755,root,root) %{_libdir}/libopensc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libopensc.so.4
+%attr(755,root,root) %ghost %{_libdir}/libopensc.so.5
 %attr(755,root,root) %{_libdir}/libsmm-local.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libsmm-local.so.4
+%attr(755,root,root) %ghost %{_libdir}/libsmm-local.so.5
 # PKCS11 modules
 %attr(755,root,root) %{_libdir}/onepin-opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/opensc-pkcs11.so
@@ -171,6 +174,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/opensc
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/opensc.conf
 %config(noreplace) %verify(not md5 mtime size) %{_datadir}/opensc/*.profile
+%if %{with openpace}
+/etc/eac/cvc/DESRCACC100001
+%endif
 %{_mandir}/man1/cardos-tool.1*
 %{_mandir}/man1/cryptoflex-tool.1*
 %{_mandir}/man1/dnie-tool.1*
@@ -178,6 +184,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gids-tool.1*
 %{_mandir}/man1/iasecc-tool.1*
 %{_mandir}/man1/netkey-tool.1*
+%{_mandir}/man1/npa-tool.1*
 %{_mandir}/man1/openpgp-tool.1*
 %{_mandir}/man1/opensc-explorer.1*
 %{_mandir}/man1/opensc-tool.1*
@@ -194,12 +201,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libopensc.so
 %attr(755,root,root) %{_libdir}/libsmm-local.so
-%{_pkgconfigdir}/libopensc.pc
+%{_pkgconfigdir}/opensc-pkcs11.pc
 
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libopensc.a
-%{_libdir}/libsmm-local.a
 
 %files -n bash-completion-opensc
 %defattr(644,root,root,755)
