@@ -6,13 +6,14 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
-Version:	0.17.0
-Release:	2
+Version:	0.19.0
+Release:	1
 License:	LGPL v2.1+
 Group:		Applications
 #Source0Download: https://github.com/OpenSC/OpenSC/releases
 Source0:	https://github.com/OpenSC/OpenSC/releases/download/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	fc502ed7753f950b8e2a18a476d0cd52
+# Source0-md5:	40734b2343cf83c62c4c403f8a37475e
+Patch0:		build.patch
 URL:		https://github.com/OpenSC/OpenSC/wiki
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.10
@@ -101,6 +102,7 @@ Bashowe uzupełnianie parametrów poleceń OpenSC.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__libtoolize}
@@ -145,13 +147,16 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/cardos-tool
 %attr(755,root,root) %{_bindir}/cryptoflex-tool
 %attr(755,root,root) %{_bindir}/dnie-tool
+%attr(755,root,root) %{_bindir}/egk-tool
 %attr(755,root,root) %{_bindir}/eidenv
 %attr(755,root,root) %{_bindir}/gids-tool
 %attr(755,root,root) %{_bindir}/iasecc-tool
 %attr(755,root,root) %{_bindir}/netkey-tool
 %attr(755,root,root) %{_bindir}/npa-tool
 %attr(755,root,root) %{_bindir}/openpgp-tool
+%attr(755,root,root) %{_bindir}/opensc-asn1
 %attr(755,root,root) %{_bindir}/opensc-explorer
+%attr(755,root,root) %{_bindir}/opensc-notify
 %attr(755,root,root) %{_bindir}/opensc-tool
 %attr(755,root,root) %{_bindir}/piv-tool
 %attr(755,root,root) %{_bindir}/pkcs11-tool
@@ -161,9 +166,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/sc-hsm-tool
 %attr(755,root,root) %{_bindir}/westcos-tool
 %attr(755,root,root) %{_libdir}/libopensc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libopensc.so.5
+%attr(755,root,root) %ghost %{_libdir}/libopensc.so.6
 %attr(755,root,root) %{_libdir}/libsmm-local.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libsmm-local.so.5
+%attr(755,root,root) %ghost %{_libdir}/libsmm-local.so.6
 # PKCS11 modules
 %attr(755,root,root) %{_libdir}/onepin-opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/opensc-pkcs11.so
@@ -180,13 +185,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/cardos-tool.1*
 %{_mandir}/man1/cryptoflex-tool.1*
 %{_mandir}/man1/dnie-tool.1*
+%{_mandir}/man1/egk-tool.1*
 %{_mandir}/man1/eidenv.1*
 %{_mandir}/man1/gids-tool.1*
 %{_mandir}/man1/iasecc-tool.1*
 %{_mandir}/man1/netkey-tool.1*
 %{_mandir}/man1/npa-tool.1*
 %{_mandir}/man1/openpgp-tool.1*
+%{_mandir}/man1/opensc-asn1.1*
 %{_mandir}/man1/opensc-explorer.1*
+%{_mandir}/man1/opensc-notify.1*
 %{_mandir}/man1/opensc-tool.1*
 %{_mandir}/man1/piv-tool.1*
 %{_mandir}/man1/pkcs11-tool.1*
@@ -195,6 +203,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/pkcs15-tool.1*
 %{_mandir}/man1/sc-hsm-tool.1*
 %{_mandir}/man1/westcos-tool.1*
+%{_mandir}/man5/opensc.conf.5*
 %{_mandir}/man5/pkcs15-profile.5*
 
 %files devel
@@ -212,12 +221,16 @@ rm -rf $RPM_BUILD_ROOT
 /etc/bash_completion.d/cardos-tool
 /etc/bash_completion.d/cryptoflex-tool
 /etc/bash_completion.d/dnie-tool
+/etc/bash_completion.d/egk-tool
 /etc/bash_completion.d/eidenv
 /etc/bash_completion.d/gids-tool
 /etc/bash_completion.d/iasecc-tool
 /etc/bash_completion.d/netkey-tool
+/etc/bash_completion.d/npa-tool
 /etc/bash_completion.d/openpgp-tool
+/etc/bash_completion.d/opensc-asn1
 /etc/bash_completion.d/opensc-explorer
+/etc/bash_completion.d/opensc-notify
 /etc/bash_completion.d/opensc-tool
 /etc/bash_completion.d/piv-tool
 /etc/bash_completion.d/pkcs11-tool
