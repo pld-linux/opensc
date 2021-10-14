@@ -7,7 +7,7 @@ Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
 Version:	0.19.0
-Release:	4
+Release:	5
 License:	LGPL v2.1+
 Group:		Applications
 #Source0Download: https://github.com/OpenSC/OpenSC/releases
