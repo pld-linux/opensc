@@ -86,7 +86,7 @@
 +	size_t  num_keygen_mechs;
 +} token_info_t;
 +
-+token_info_t token;
++extern token_info_t token;
 +
 +#endif /* P11TEST_COMMON_H */
 +
@@ -124,3 +124,14 @@ Index: git/src/pkcs15init/pkcs15-oberthur.c
  	if (sc_profile_get_file(profile, COSM_TITLE"-token-info", &file)) {
  		rv = SC_ERROR_INCONSISTENT_PROFILE;
  		SC_TEST_GOTO_ERR(ctx, SC_LOG_DEBUG_NORMAL, rv, "Cannot find "COSM_TITLE"-token-info");
+--- opensc-0.19.0/src/tests/p11test/p11test.c~	2018-09-13 13:52:42.000000000 +0200
++++ opensc-0.19.0/src/tests/p11test/p11test.c	2021-10-15 22:37:12.303953281 +0200
+@@ -33,6 +33,8 @@
+ 
+ #define DEFAULT_P11LIB	"../../pkcs11/.libs/opensc-pkcs11.so"
+ 
++token_info_t token;
++
+ void display_usage() {
+ 	fprintf(stdout,
+ 		" Usage:\n"
