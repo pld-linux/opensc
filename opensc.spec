@@ -6,17 +6,15 @@
 Summary:	OpenSC library - for accessing SmartCard devices using PC/SC Lite
 Summary(pl.UTF-8):	Biblioteka OpenSC - do korzystania z kart procesorowych przy użyciu PC/SC Lite
 Name:		opensc
-Version:	0.19.0
-Release:	6
+Version:	0.23.0
+Release:	1
 License:	LGPL v2.1+
 Group:		Applications
 #Source0Download: https://github.com/OpenSC/OpenSC/releases
 Source0:	https://github.com/OpenSC/OpenSC/releases/download/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	40734b2343cf83c62c4c403f8a37475e
-Patch0:		build.patch
-Patch1:		no-Werror.patch
+# Source0-md5:	35c599e673ae9205550974e2dcbe0825
 URL:		https://github.com/OpenSC/OpenSC/wiki
-BuildRequires:	autoconf >= 2.60
+BuildRequires:	autoconf >= 2.68
 BuildRequires:	automake >= 1:1.10
 BuildRequires:	cmocka-devel
 BuildRequires:	docbook-style-xsl
@@ -25,7 +23,7 @@ BuildRequires:	libtool >= 1:1.4.2-9
 BuildRequires:	libxslt-progs
 %{?with_openct:BuildRequires:	openct-devel}
 %{?with_openpace:BuildRequires:	openpace-devel >= 0.9}
-BuildRequires:	openssl-devel >= 0.9.7d
+BuildRequires:	openssl-devel >= 1.1.1
 %{!?with_openct:BuildRequires:	pcsc-lite-devel >= 1.8.22}
 BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	readline-devel
@@ -68,7 +66,7 @@ Group:		Development/Tools
 Requires:	%{name} = %{version}-%{release}
 Requires:	libltdl-devel
 %{?with_openct:Requires:	openct-devel}
-Requires:	openssl-devel >= 0.9.7d
+Requires:	openssl-devel >= 1.1.1
 %{!?with_openct:Requires:	pcsc-lite-devel >= 1.8.22}
 Requires:	zlib-devel
 
@@ -104,8 +102,6 @@ Bashowe uzupełnianie parametrów poleceń OpenSC.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
 
 %build
 %{__libtoolize}
@@ -118,6 +114,7 @@ Bashowe uzupełnianie parametrów poleceń OpenSC.
 	%{!?with_openct:--enable-pcsc --disable-openct} \
 	%{!?with_openpace:--disable-openpace} \
 	--disable-silent-rules \
+	--disable-strict \
 	--enable-doc \
 	--with-pcsc-provider=%{_libdir}/libpcsclite.so.1
 
@@ -153,6 +150,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/egk-tool
 %attr(755,root,root) %{_bindir}/eidenv
 %attr(755,root,root) %{_bindir}/gids-tool
+%attr(755,root,root) %{_bindir}/goid-tool
 %attr(755,root,root) %{_bindir}/iasecc-tool
 %attr(755,root,root) %{_bindir}/netkey-tool
 %attr(755,root,root) %{_bindir}/npa-tool
@@ -162,6 +160,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/opensc-notify
 %attr(755,root,root) %{_bindir}/opensc-tool
 %attr(755,root,root) %{_bindir}/piv-tool
+%attr(755,root,root) %{_bindir}/pkcs11-register
 %attr(755,root,root) %{_bindir}/pkcs11-tool
 %attr(755,root,root) %{_bindir}/pkcs15-crypt
 %attr(755,root,root) %{_bindir}/pkcs15-init
@@ -169,9 +168,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/sc-hsm-tool
 %attr(755,root,root) %{_bindir}/westcos-tool
 %attr(755,root,root) %{_libdir}/libopensc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libopensc.so.6
+%attr(755,root,root) %ghost %{_libdir}/libopensc.so.8
 %attr(755,root,root) %{_libdir}/libsmm-local.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libsmm-local.so.6
+%attr(755,root,root) %ghost %{_libdir}/libsmm-local.so.8
 # PKCS11 modules
 %attr(755,root,root) %{_libdir}/onepin-opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/opensc-pkcs11.so
@@ -183,6 +182,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/opensc.conf
 %config(noreplace) %verify(not md5 mtime size) %{_datadir}/opensc/*.profile
 %if %{with openpace}
+/etc/eac/cvc/DESCHSMCVCA00001
 /etc/eac/cvc/DESRCACC100001
 %endif
 %{_mandir}/man1/cardos-tool.1*
@@ -191,6 +191,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/egk-tool.1*
 %{_mandir}/man1/eidenv.1*
 %{_mandir}/man1/gids-tool.1*
+%{_mandir}/man1/goid-tool.1*
 %{_mandir}/man1/iasecc-tool.1*
 %{_mandir}/man1/netkey-tool.1*
 %{_mandir}/man1/npa-tool.1*
@@ -200,6 +201,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/opensc-notify.1*
 %{_mandir}/man1/opensc-tool.1*
 %{_mandir}/man1/piv-tool.1*
+%{_mandir}/man1/pkcs11-register.1*
 %{_mandir}/man1/pkcs11-tool.1*
 %{_mandir}/man1/pkcs15-crypt.1*
 %{_mandir}/man1/pkcs15-init.1*
@@ -227,6 +229,7 @@ rm -rf $RPM_BUILD_ROOT
 /etc/bash_completion.d/egk-tool
 /etc/bash_completion.d/eidenv
 /etc/bash_completion.d/gids-tool
+/etc/bash_completion.d/goid-tool
 /etc/bash_completion.d/iasecc-tool
 /etc/bash_completion.d/netkey-tool
 /etc/bash_completion.d/npa-tool
@@ -236,6 +239,7 @@ rm -rf $RPM_BUILD_ROOT
 /etc/bash_completion.d/opensc-notify
 /etc/bash_completion.d/opensc-tool
 /etc/bash_completion.d/piv-tool
+/etc/bash_completion.d/pkcs11-register
 /etc/bash_completion.d/pkcs11-tool
 /etc/bash_completion.d/pkcs15-crypt
 /etc/bash_completion.d/pkcs15-init
