@@ -27,7 +27,8 @@ BuildRequires:	openssl-devel >= 1.1.1
 %{!?with_openct:BuildRequires:	pcsc-lite-devel >= 1.8.22}
 BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	readline-devel
-BuildRequires:	rpmbuild(macros) >= 1.364
+BuildRequires:	rpm-build >= 4.6
+BuildRequires:	rpmbuild(macros) >= 1.673
 BuildRequires:	zlib-devel
 Requires:	filesystem >= 4.0-28
 %{?with_openpace:Requires:	openpace >= 0.9}
@@ -89,6 +90,8 @@ Summary:	Bash completion for OpenSC commands
 Summary(pl.UTF-8):	Bashowe uzupełnianie parametrów poleceń OpenSC
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
+Requires:	bash-completion >= 1:2.0
+BuildArch:	noarch
 
 %description -n bash-completion-opensc
 Bash completion for OpenSC commands.
@@ -113,6 +116,7 @@ Bashowe uzupełnianie parametrów poleceń OpenSC.
 	--disable-silent-rules \
 	--disable-strict \
 	--enable-doc \
+	--with-completiondir=%{bash_compdir} \
 	--with-pcsc-provider=%{_libdir}/libpcsclite.so.1
 
 %{__make}
@@ -123,7 +127,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_libdir}/pkcs11}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
-	completiondir=/etc/bash_completion.d
+	xdg_autostartdir=/etc/xdg/autostart
 
 # not needed (dlopened by soname)
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/{onepin-opensc-pkcs11,opensc-pkcs11,pkcs11-spy}.la
@@ -179,6 +183,8 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/opensc/opensc.conf
 %dir %{_datadir}/opensc
 %config(noreplace) %verify(not md5 mtime size) %{_datadir}/opensc/*.profile
+%{_desktopdir}/org.opensc.notify.desktop
+/etc/xdg/autostart/pkcs11-register.desktop
 %if %{with openpace}
 /etc/eac/cvc/DESCHSMCVCA00001
 /etc/eac/cvc/DESRCACC100001
@@ -221,26 +227,26 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n bash-completion-opensc
 %defattr(644,root,root,755)
-/etc/bash_completion.d/cardos-tool
-/etc/bash_completion.d/cryptoflex-tool
-/etc/bash_completion.d/dnie-tool
-/etc/bash_completion.d/egk-tool
-/etc/bash_completion.d/eidenv
-/etc/bash_completion.d/gids-tool
-/etc/bash_completion.d/goid-tool
-/etc/bash_completion.d/iasecc-tool
-/etc/bash_completion.d/netkey-tool
-/etc/bash_completion.d/npa-tool
-/etc/bash_completion.d/openpgp-tool
-/etc/bash_completion.d/opensc-asn1
-/etc/bash_completion.d/opensc-explorer
-/etc/bash_completion.d/opensc-notify
-/etc/bash_completion.d/opensc-tool
-/etc/bash_completion.d/piv-tool
-/etc/bash_completion.d/pkcs11-register
-/etc/bash_completion.d/pkcs11-tool
-/etc/bash_completion.d/pkcs15-crypt
-/etc/bash_completion.d/pkcs15-init
-/etc/bash_completion.d/pkcs15-tool
-/etc/bash_completion.d/sc-hsm-tool
-/etc/bash_completion.d/westcos-tool
+%{bash_compdir}/cardos-tool
+%{bash_compdir}/cryptoflex-tool
+%{bash_compdir}/dnie-tool
+%{bash_compdir}/egk-tool
+%{bash_compdir}/eidenv
+%{bash_compdir}/gids-tool
+%{bash_compdir}/goid-tool
+%{bash_compdir}/iasecc-tool
+%{bash_compdir}/netkey-tool
+%{bash_compdir}/npa-tool
+%{bash_compdir}/openpgp-tool
+%{bash_compdir}/opensc-asn1
+%{bash_compdir}/opensc-explorer
+%{bash_compdir}/opensc-notify
+%{bash_compdir}/opensc-tool
+%{bash_compdir}/piv-tool
+%{bash_compdir}/pkcs11-register
+%{bash_compdir}/pkcs11-tool
+%{bash_compdir}/pkcs15-crypt
+%{bash_compdir}/pkcs15-init
+%{bash_compdir}/pkcs15-tool
+%{bash_compdir}/sc-hsm-tool
+%{bash_compdir}/westcos-tool
