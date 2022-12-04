@@ -36,10 +36,6 @@ Obsoletes:	browser-plugin-opensc
 Obsoletes:	mozilla-plugin-opensc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-# datadir is used for config files and (editable) profiles
-%define		_datadir	/etc
-%define		_sysconfdir	/etc/opensc
-
 %description
 libopensc is a library for accessing SmartCard devices using PC/SC
 Lite middleware package. It is also the core library of the OpenSC
@@ -110,6 +106,7 @@ Bashowe uzupełnianie parametrów poleceń OpenSC.
 %{__autoheader}
 %{__automake}
 %configure \
+	--sysconfdir=%{_sysconfdir}/opensc \
 	%{?with_openct:--enable-openct --disable-pcsc} \
 	%{!?with_openct:--enable-pcsc --disable-openct} \
 	%{!?with_openpace:--disable-openpace} \
@@ -178,8 +175,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/pkcs11/onepin-opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/pkcs11/opensc-pkcs11.so
 %attr(755,root,root) %{_libdir}/pkcs11/pkcs11-spy.so
+%dir %{_sysconfdir}/opensc
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/opensc/opensc.conf
 %dir %{_datadir}/opensc
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/opensc.conf
 %config(noreplace) %verify(not md5 mtime size) %{_datadir}/opensc/*.profile
 %if %{with openpace}
 /etc/eac/cvc/DESCHSMCVCA00001
