@@ -33,8 +33,9 @@ BuildRequires:	zlib-devel
 Requires:	filesystem >= 4.0-28
 %{?with_openpace:Requires:	openpace >= 0.9}
 %{!?with_openct:Requires:	pcsc-lite-libs >= 1.8.22}
-Obsoletes:	browser-plugin-opensc
-Obsoletes:	mozilla-plugin-opensc
+Obsoletes:	browser-plugin-opensc < 0.12
+Obsoletes:	mozilla-plugin-opensc < 0.11.0-2
+Obsoletes:	opensc-initramfs < 0.12.2-2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
